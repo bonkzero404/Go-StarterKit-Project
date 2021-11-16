@@ -40,3 +40,7 @@ func ApiCreated(ctx *fiber.Ctx, message string, data interface{}) error {
 func ApiOk(ctx *fiber.Ctx, message string, data interface{}) error {
 	return ApiWrapper(ctx, message, fiber.StatusOK, "success_ok", data)
 }
+
+func ApiResponseError(ctx *fiber.Ctx, message string, code int, data interface{}) error {
+	return ApiWrapper(ctx, message, code, "error_api", data)
+}

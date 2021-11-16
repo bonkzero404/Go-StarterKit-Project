@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	respModel "go-boilerplate-clean-arch/domain/models"
 	"go-boilerplate-clean-arch/modules/auth/domain/interfaces"
 	"go-boilerplate-clean-arch/modules/auth/domain/models"
 	"go-boilerplate-clean-arch/utils"
@@ -39,7 +40,8 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 	response, err := handler.AuthService.Authenticate(&request)
 
 	if err != nil {
-		return utils.ApiUnprocessableEntity(c, "Invalid authentication", err)
+		re := err.(*respModel.ApiErrorResponse)
+		return utils.ApiResponseError(c, "Invalid authentication", re.StatusCode, err)
 	}
 
 	return utils.ApiOk(c, "Authentication successful", response)
@@ -53,7 +55,8 @@ func (handler *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	response, err := handler.AuthService.GetProfile(id)
 
 	if err != nil {
-		return utils.ApiUnprocessableEntity(c, "Invalid authentication", err)
+		re := err.(*respModel.ApiErrorResponse)
+		return utils.ApiResponseError(c, "Failed to get user data", re.StatusCode, err)
 	}
 
 	return utils.ApiOk(c, "Load user successful", response)

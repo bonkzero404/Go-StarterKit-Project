@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	respModel "go-boilerplate-clean-arch/domain/models"
 	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
 	"go-boilerplate-clean-arch/modules/user/domain/models"
 	"go-boilerplate-clean-arch/utils"
@@ -40,7 +41,8 @@ func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
 	response, err := handler.UserService.CreateUser(&request)
 
 	if err != nil {
-		return utils.ApiUnprocessableEntity(c, "Something went wrong with your data", err)
+		re := err.(*respModel.ApiErrorResponse)
+		return utils.ApiResponseError(c, "Error registration", re.StatusCode, err)
 	}
 
 	return utils.ApiCreated(c, "Register user successful", response)
