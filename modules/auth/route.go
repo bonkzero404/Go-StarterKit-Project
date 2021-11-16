@@ -17,7 +17,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 
 	user := app.Group(utils.SetupApiGroup() + endpointGroup)
 
-	user.Post("/", handler.AuthHandler.Authentication)
+	user.Post("/", middleware.RateLimiter(5, 120), handler.AuthHandler.Authentication)
 
-	user.Get("/me", middleware.Authenticate(), handler.AuthHandler.GetProfile)
+	user.Get("/me", middleware.Authenticate(), middleware.RateLimiter(5, 30), handler.AuthHandler.GetProfile)
 }
