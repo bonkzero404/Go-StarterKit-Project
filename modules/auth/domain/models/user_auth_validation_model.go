@@ -1,6 +1,6 @@
 package models
 
 type UserAuthValidation struct {
-	Email    string `validate:"required"`
-	Password string `validate:"required"`
+	EmailValid    string `validate:"required"`
+	PasswordValid string `validate:"required"`
 }

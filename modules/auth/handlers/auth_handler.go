@@ -28,8 +28,8 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 	}
 
 	userValidation := models.UserAuthValidation{
-		Email:    request.Email,
-		Password: request.Password,
+		EmailValid:    request.Email,
+		PasswordValid: request.Password,
 	}
 
 	errors := utils.ValidateStruct(userValidation)

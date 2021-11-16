@@ -44,16 +44,17 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 
 	match := utils.CheckPasswordHash(auth.Password, user.Password)
 
-	if match == false {
+	if !match {
 		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
 			Message:    "Invalid email or password",
 		}
 	}
 
+	exp := time.Now().Add(time.Hour * 72).Unix()
 	claims := jwt.MapClaims{
 		"id":  user.ID.String(),
-		"exp": time.Now().Add(time.Hour * 72).Unix(),
+		"exp": exp,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -73,6 +74,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 		Phone:    user.Phone,
 		IsActive: user.IsActive,
 		Token:    t,
+		Exp:      exp,
 	}
 
 	return &response, nil

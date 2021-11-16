@@ -7,4 +7,5 @@ type UserAuthResponse struct {
 	Phone    string `json:"phone"`
 	IsActive bool   `json:"is_active"`
 	Token    string `json:"token"`
+	Exp      int64  `json:"expires"`
 }
