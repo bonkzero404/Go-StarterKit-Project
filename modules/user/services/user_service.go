@@ -4,6 +4,7 @@ import (
 	"go-boilerplate-clean-arch/domain/stores"
 	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
 	"go-boilerplate-clean-arch/modules/user/domain/models"
+	"go-boilerplate-clean-arch/utils"
 )
 
 type UserService struct {
@@ -17,11 +18,13 @@ func NewUserService(userRepository interfaces.UserRepositoryInterface) interface
 }
 
 func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.UserCreateResponse, error) {
+	hashPassword, _ := utils.HashPassword(user.Password)
+
 	userData := stores.User{
 		FullName: user.FullName,
 		Email:    user.Email,
 		Phone:    user.Phone,
-		Password: user.Password,
+		Password: hashPassword,
 	}
 
 	result, err := service.UserRepository.CreateUser(&userData)
