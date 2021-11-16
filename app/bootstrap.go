@@ -8,6 +8,6 @@ import (
 )
 
 func Bootstrap(app *fiber.App) {
-	user.Register(app)
-	auth.Register(app)
+	user.RegisterModule(app)
+	auth.RegisterModule(app)
 }

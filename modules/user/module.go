@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func Register(app *fiber.App) {
+func RegisterModule(app *fiber.App) {
 	userRepository := repositories.NewUserRepository()
 	userService := services.NewUserService(userRepository)
 	userHandler := handlers.NewUserHandler(userService)
