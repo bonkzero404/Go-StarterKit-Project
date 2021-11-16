@@ -6,6 +6,7 @@ import (
 	"go-boilerplate-clean-arch/utils"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type AuthHandler struct {
@@ -42,4 +43,18 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 	}
 
 	return utils.ApiOk(c, "Authentication successful", response)
+}
+
+func (handler *AuthHandler) GetProfile(c *fiber.Ctx) error {
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	id := claims["id"].(string)
+
+	response, err := handler.AuthService.GetProfile(id)
+
+	if err != nil {
+		return utils.ApiUnprocessableEntity(c, "Invalid authentication", err)
+	}
+
+	return utils.ApiOk(c, "Load user successful", response)
 }

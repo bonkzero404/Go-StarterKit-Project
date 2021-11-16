@@ -36,10 +36,11 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 	}
 
 	claims := jwt.MapClaims{
-		"full_name": user.FullName,
-		"email":     user.Email,
-		"phone":     user.Phone,
-		"exp":       time.Now().Add(time.Hour * 72).Unix(),
+		"id": user.ID.String(),
+		// "full_name": user.FullName,
+		// "email":     user.Email,
+		// "phone":     user.Phone,
+		"exp": time.Now().Add(time.Hour * 72).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -59,5 +60,22 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 	}
 
 	return &response, nil
+}
 
+func (service AuthService) GetProfile(id string) (*models.UserAuthProfileResponse, error) {
+	user, errUser := service.UserRepository.FindUserById(id)
+
+	if errUser != nil {
+		return &models.UserAuthProfileResponse{}, errUser
+	}
+
+	response := models.UserAuthProfileResponse{
+		ID:       user.ID.String(),
+		FullName: user.FullName,
+		Email:    user.Email,
+		Phone:    user.Phone,
+		IsActive: user.IsActive,
+	}
+
+	return &response, nil
 }
