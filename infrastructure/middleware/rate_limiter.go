@@ -14,8 +14,8 @@ func RateLimiter(max int, duration time.Duration) func(ctx *fiber.Ctx) error {
 	return limiter.New(limiter.Config{
 		LimitReached: func(ctx *fiber.Ctx) error {
 			return utils.ApiResponseError(ctx, "Rate limit", fiber.StatusRequestEntityTooLarge, &respModel.ApiErrorResponse{
-				StatusCode: fiber.StatusRequestEntityTooLarge,
-				Message:    "Request entity too large",
+				StatusCode: fiber.StatusTooManyRequests,
+				Message:    "Request too many request",
 			})
 		},
 		Max:        max,
