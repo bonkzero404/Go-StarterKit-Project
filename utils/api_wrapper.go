@@ -22,17 +22,21 @@ func ApiWrapper(ctx *fiber.Ctx, message string, code int, status string, data in
 }
 
 func ApiErrorValidation(ctx *fiber.Ctx, message string, data interface{}) error {
-	return ApiWrapper(ctx, message, 422, "error_validation", data)
+	return ApiWrapper(ctx, message, fiber.StatusNotAcceptable, "error_validation", data)
 }
 
 func ApiUnprocessableEntity(ctx *fiber.Ctx, message string, data interface{}) error {
-	return ApiWrapper(ctx, message, 422, "error_unprocessable_entity", data)
+	return ApiWrapper(ctx, message, fiber.StatusUnprocessableEntity, "error_unprocessable_entity", data)
+}
+
+func ApiUnauthorized(ctx *fiber.Ctx, message string, data interface{}) error {
+	return ApiWrapper(ctx, message, fiber.StatusUnauthorized, "error_unauthorized", data)
 }
 
 func ApiCreated(ctx *fiber.Ctx, message string, data interface{}) error {
-	return ApiWrapper(ctx, message, 201, "success_created", data)
+	return ApiWrapper(ctx, message, fiber.StatusCreated, "success_created", data)
 }
 
 func ApiOk(ctx *fiber.Ctx, message string, data interface{}) error {
-	return ApiWrapper(ctx, message, 200, "success_ok", data)
+	return ApiWrapper(ctx, message, fiber.StatusOK, "success_ok", data)
 }
