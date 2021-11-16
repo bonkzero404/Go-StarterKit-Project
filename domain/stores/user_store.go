@@ -11,7 +11,7 @@ type User struct {
 	FullName string    `gorm:"type:varchar(100);index;not null"`
 	Email    string    `gorm:"type:varchar(30);uniqueIndex;not null"`
 	Phone    string    `gorm:"type:varchar(20);uniqueIndex;not null"`
-	Password string    `gorm:"type:varchar(20);not null"`
+	Password string    `gorm:"type:varchar(60);not null"`
 	IsActive bool
 }
 
