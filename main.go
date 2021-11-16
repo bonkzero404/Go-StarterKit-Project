@@ -16,5 +16,6 @@ func main() {
 	database.MigrateDB()
 	appRoute.Bootstrap(app)
 	appPort := fmt.Sprintf(":%s", config.Config("APP_PORT"))
+
 	app.Listen(appPort)
 }
