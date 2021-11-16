@@ -41,5 +41,5 @@ func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.U
 		IsActive: userData.IsActive,
 	}
 
-	return &response, err
+	return &response, nil
 }
