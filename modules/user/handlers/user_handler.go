@@ -18,7 +18,7 @@ func NewUserHandler(userService interfaces.UserServiceInterface) *UserHandler {
 	}
 }
 
-func (controller *UserHandler) RegisterUser(c *fiber.Ctx) error {
+func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
 	var request models.UserCreateRequest
 
 	if err := c.BodyParser(&request); err != nil {
@@ -37,7 +37,7 @@ func (controller *UserHandler) RegisterUser(c *fiber.Ctx) error {
 		return utils.ApiErrorValidation(c, "Error validation request", errors)
 	}
 
-	response, err := controller.UserService.CreateUser(&request)
+	response, err := handler.UserService.CreateUser(&request)
 
 	if err != nil {
 		return utils.ApiUnprocessableEntity(c, "Something went wrong with your data", err)

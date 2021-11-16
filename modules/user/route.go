@@ -11,10 +11,10 @@ type ApiRoute struct {
 	UserHandler handlers.UserHandler
 }
 
-func (controller *ApiRoute) Route(app fiber.Router) {
+func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/user"
 
 	user := app.Group(utils.SetupApiGroup() + endpointGroup)
 
-	user.Post("/register", controller.UserHandler.RegisterUser)
+	user.Post("/register", handler.UserHandler.RegisterUser)
 }
