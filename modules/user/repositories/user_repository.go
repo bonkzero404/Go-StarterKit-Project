@@ -25,3 +25,13 @@ func (repository UserRepository) CreateUser(user *stores.User) (*stores.User, er
 
 	return user, nil
 }
+
+func (repository UserRepository) FindUserByEmail(email string) (*stores.User, error) {
+	var user *stores.User
+
+	if err := repository.DB.First(&user, "email = ?", email).Error; err != nil {
+		return &stores.User{}, err
+	}
+
+	return user, nil
+}
