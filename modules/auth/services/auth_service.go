@@ -81,6 +81,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 }
 
 func (service AuthService) GetProfile(id string) (*models.UserAuthProfileResponse, error) {
+
 	user, errUser := service.UserRepository.FindUserById(id)
 
 	if errUser != nil {
@@ -96,6 +97,48 @@ func (service AuthService) GetProfile(id string) (*models.UserAuthProfileRespons
 		Email:    user.Email,
 		Phone:    user.Phone,
 		IsActive: user.IsActive,
+	}
+
+	return &response, nil
+}
+
+func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*models.UserAuthResponse, error) {
+	beforeClaims := tokenUser.Claims.(jwt.MapClaims)
+	id := beforeClaims["id"].(string)
+
+	user, errUser := service.UserRepository.FindUserById(id)
+
+	if errUser != nil {
+		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    "Something went wrong",
+		}
+	}
+
+	exp := time.Now().Add(time.Hour * 72).Unix()
+	claims := jwt.MapClaims{
+		"id":  user.ID.String(),
+		"exp": exp,
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	t, errToken := token.SignedString([]byte(config.Config("JWT_SECRET")))
+	if errToken != nil {
+		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    "Error token",
+		}
+	}
+
+	response := models.UserAuthResponse{
+		ID:       user.ID.String(),
+		FullName: user.FullName,
+		Email:    user.Email,
+		Phone:    user.Phone,
+		IsActive: user.IsActive,
+		Token:    t,
+		Exp:      exp,
 	}
 
 	return &response, nil

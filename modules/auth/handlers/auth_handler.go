@@ -48,8 +48,8 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 }
 
 func (handler *AuthHandler) GetProfile(c *fiber.Ctx) error {
-	user := c.Locals("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
+	token := c.Locals("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
 	id := claims["id"].(string)
 
 	response, err := handler.AuthService.GetProfile(id)
@@ -60,4 +60,17 @@ func (handler *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	}
 
 	return utils.ApiOk(c, "Load user successful", response)
+}
+
+func (handler *AuthHandler) RefreshToken(c *fiber.Ctx) error {
+	token := c.Locals("user").(*jwt.Token)
+
+	response, err := handler.AuthService.RefreshToken(token)
+
+	if err != nil {
+		re := err.(*respModel.ApiErrorResponse)
+		return utils.ApiResponseError(c, "Failed to refresh token", re.StatusCode, err)
+	}
+
+	return utils.ApiOk(c, "Refresh token successful", response)
 }
