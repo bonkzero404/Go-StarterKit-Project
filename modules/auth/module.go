@@ -8,6 +8,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+/**
+This function is for registering repository - service - handler
+*/
 func RegisterModule(app *fiber.App) {
 	userRepository := repositories.NewUserRepository()
 	authService := services.NewAuthService(userRepository)

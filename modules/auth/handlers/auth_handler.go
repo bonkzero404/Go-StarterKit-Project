@@ -20,6 +20,9 @@ func NewAuthHandler(authService interfaces.UserAuthServiceInterface) *AuthHandle
 	}
 }
 
+/**
+Authentication handler
+*/
 func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 	var request models.UserAuthRequest
 
@@ -47,6 +50,9 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 	return utils.ApiOk(c, "Authentication successful", response)
 }
 
+/**
+Get user profile
+*/
 func (handler *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
@@ -62,6 +68,9 @@ func (handler *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	return utils.ApiOk(c, "Load user successful", response)
 }
 
+/**
+Refresh token
+*/
 func (handler *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 

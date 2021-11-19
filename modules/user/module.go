@@ -10,6 +10,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+/**
+Service factory registration
+*/
 func registerActivationFactory(userRepository interfaces.UserRepositoryInterface) factories.ActionFactoryInterface {
 	actFactory := factories.NewUserActivationServiceFactory(userRepository)
 	forgotPassFactory := factories.NewUserForgotPassServiceFactory(userRepository)
@@ -17,6 +20,9 @@ func registerActivationFactory(userRepository interfaces.UserRepositoryInterface
 	return factories.NewActionFactory(actFactory, forgotPassFactory)
 }
 
+/**
+This function is for registering repository - service - handler
+*/
 func RegisterModule(app *fiber.App) {
 
 	userRepository := repositories.NewUserRepository()

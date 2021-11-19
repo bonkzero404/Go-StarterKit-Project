@@ -25,9 +25,15 @@ func NewAuthService(userRepository userInterface.UserRepositoryInterface) interf
 	}
 }
 
+/**
+This function is used to handle authentication
+*/
 func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.UserAuthResponse, error) {
+	// Get user by email
 	user, errUser := service.UserRepository.FindUserByEmail(auth.Email)
 
+	// Check if the user is not found
+	// then displayan error message
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
@@ -35,6 +41,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 		}
 	}
 
+	// Check if a query operation error occurs
 	if errUser != nil {
 		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
@@ -42,6 +49,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 		}
 	}
 
+	// Check if the user status is not active
 	if !user.IsActive {
 		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
@@ -49,8 +57,10 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 		}
 	}
 
+	// Match password hashes
 	match := utils.CheckPasswordHash(auth.Password, user.Password)
 
+	// Check if it doesn't match, show an error message
 	if !match {
 		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
@@ -58,14 +68,17 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 		}
 	}
 
+	// Set token JWT Claims
 	exp := time.Now().Add(time.Hour * 72).Unix()
 	claims := jwt.MapClaims{
 		"id":  user.ID.String(),
 		"exp": exp,
 	}
 
+	// Create token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
+	// Check if there is an error in creating the token
 	t, errToken := token.SignedString([]byte(config.Config("JWT_SECRET")))
 	if errToken != nil {
 		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
@@ -74,6 +87,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 		}
 	}
 
+	// Set response message to succeed
 	response := models.UserAuthResponse{
 		ID:       user.ID.String(),
 		FullName: user.FullName,
@@ -87,10 +101,14 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 	return &response, nil
 }
 
+/**
+This function is used to authorize users and display logged in user data
+*/
 func (service AuthService) GetProfile(id string) (*models.UserAuthProfileResponse, error) {
-
+	// Get user from database
 	user, errUser := service.UserRepository.FindUserById(id)
 
+	// Check if there is a query error
 	if errUser != nil {
 		return &models.UserAuthProfileResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
@@ -98,6 +116,7 @@ func (service AuthService) GetProfile(id string) (*models.UserAuthProfileRespons
 		}
 	}
 
+	// Set response message
 	response := models.UserAuthProfileResponse{
 		ID:       user.ID.String(),
 		FullName: user.FullName,
@@ -109,12 +128,18 @@ func (service AuthService) GetProfile(id string) (*models.UserAuthProfileRespons
 	return &response, nil
 }
 
+/**
+This function is used to refresh token
+*/
 func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*models.UserAuthResponse, error) {
+	// Get data from token then convert to string
 	beforeClaims := tokenUser.Claims.(jwt.MapClaims)
 	id := beforeClaims["id"].(string)
 
+	// Get user data
 	user, errUser := service.UserRepository.FindUserById(id)
 
+	// Check if something went wrong with query
 	if errUser != nil {
 		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
@@ -122,6 +147,7 @@ func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*models.UserAuthR
 		}
 	}
 
+	// Recreate token
 	exp := time.Now().Add(time.Hour * 72).Unix()
 	claims := jwt.MapClaims{
 		"id":  user.ID.String(),
@@ -138,6 +164,7 @@ func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*models.UserAuthR
 		}
 	}
 
+	// Set response message
 	response := models.UserAuthResponse{
 		ID:       user.ID.String(),
 		FullName: user.FullName,

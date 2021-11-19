@@ -6,6 +6,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+/**
+This function is used to wrap a json response globally
+*/
 func ApiWrapper(ctx *fiber.Ctx, message string, code int, status string, data interface{}) error {
 	meta := models.Meta{
 		Message: message,

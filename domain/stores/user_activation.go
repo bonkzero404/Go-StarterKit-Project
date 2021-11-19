@@ -9,11 +9,19 @@ import (
 
 type ActivationType string
 
+/**
+This constant is used to create a string enumeration type to
+distinguish the type of user who is activating or requesting
+forgotten passwords
+*/
 const (
 	ACTIVATION_CODE ActivationType = "ACTIVATION_CODE"
 	FORGOT_PASSWORD ActivationType = "FORGOT_PASSWORD"
 )
 
+/**
+Table model
+*/
 type UserActivation struct {
 	gorm.Model
 	ID        uuid.UUID      `gorm:"type:char(36);primary_key"`
@@ -25,6 +33,11 @@ type UserActivation struct {
 	IsUsed    bool
 }
 
+/**
+This function is a feature that gorm has for making hooks,
+this hook function is used to generate uuid and add 2 hours
+when the user performs the create action
+*/
 func (*UserActivation) BeforeCreate(tx *gorm.DB) error {
 	t := time.Now()
 	newT := t.Add(time.Hour * 2)
