@@ -22,6 +22,7 @@ type UserActivation struct {
 	Code      string         `gorm:"type:char(32);index;not null"`
 	ActType   ActivationType `gorm:"type:char(30);index;not null"`
 	ExpiredAt *time.Time
+	IsUsed    bool
 }
 
 func (*UserActivation) BeforeCreate(tx *gorm.DB) error {
