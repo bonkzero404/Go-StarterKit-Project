@@ -51,3 +51,29 @@ func (repository UserRepository) FindUserById(id string) (*stores.User, error) {
 
 	return user, nil
 }
+
+func (repository UserRepository) FindUserActivationCode(userId string, code string) (*stores.UserActivation, error) {
+	var act *stores.UserActivation
+
+	if err := repository.DB.First(&act, "user_id = ? AND code = ?", userId, code).Error; err != nil {
+		return &stores.UserActivation{}, err
+	}
+
+	return act, nil
+}
+
+func (repository UserRepository) UpdateUserActivation(id string, stat bool) (*stores.User, error) {
+	var user *stores.User
+
+	if err := repository.DB.First(&user, "id = ?", id).Error; err != nil {
+		return &stores.User{}, err
+	}
+
+	user.IsActive = stat
+
+	if err := repository.DB.Save(&user).Error; err != nil {
+		return &stores.User{}, err
+	}
+
+	return user, nil
+}

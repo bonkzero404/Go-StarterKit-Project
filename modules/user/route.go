@@ -18,4 +18,6 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 	user := app.Group(utils.SetupApiGroup() + endpointGroup)
 
 	user.Post("/register", middleware.RateLimiter(5, 30), handler.UserHandler.RegisterUser)
+
+	user.Post("/activation", middleware.RateLimiter(5, 30), handler.UserHandler.UserActivation)
 }

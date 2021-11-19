@@ -10,4 +10,8 @@ type UserRepositoryInterface interface {
 	FindUserByEmail(email string) (*stores.User, error)
 
 	FindUserById(id string) (*stores.User, error)
+
+	FindUserActivationCode(userId string, code string) (*stores.UserActivation, error)
+
+	UpdateUserActivation(id string, stat bool) (*stores.User, error)
 }

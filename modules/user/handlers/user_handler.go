@@ -47,3 +47,30 @@ func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
 
 	return utils.ApiCreated(c, "Register user successful", response)
 }
+
+func (handler *UserHandler) UserActivation(c *fiber.Ctx) error {
+	var request models.UserActivationRequest
+
+	if err := c.BodyParser(&request); err != nil {
+		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
+	}
+
+	userValidation := models.UserActivationRequestValidation{
+		Email: request.Email,
+		Code:  request.Code,
+	}
+
+	errors := utils.ValidateStruct(userValidation)
+	if errors != nil {
+		return utils.ApiErrorValidation(c, "Error validation request", errors)
+	}
+
+	response, err := handler.UserService.UserActivation(request.Email, request.Code)
+
+	if err != nil {
+		re := err.(*respModel.ApiErrorResponse)
+		return utils.ApiResponseError(c, "Error activation user", re.StatusCode, err)
+	}
+
+	return utils.ApiCreated(c, "Activation user successful", response)
+}
