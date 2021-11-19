@@ -145,7 +145,7 @@ MAIL_FROM=Administrator <admin@example.com>
 
 ```
 
-Then create a database in MySQL or PostgreSQL with the appropriate name in the configuration file above.
+After you create the configuration file, create a database in MySQL or PostgreSQL with the appropriate name in the configuration file above.
 
 Run the command in the root directory
 
