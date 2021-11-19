@@ -173,7 +173,6 @@ This command has a "hot reload" feature, but you will need the <b>reflect</b> li
 POST /api/v1/user/register HTTP/1.1
 Host: 127.0.0.1:3000
 Content-Type: application/json
-Content-Length: 133
 
 {
     "full_name": "Jhon Doe",
@@ -189,7 +188,6 @@ Content-Length: 133
 POST /api/v1/user/activation HTTP/1.1
 Host: 127.0.0.1:3000
 Content-Type: application/json
-Content-Length: 85
 
 {
     "email": "jhon@example.com",
@@ -203,7 +201,6 @@ Content-Length: 85
 POST /api/v1/user/activation/re-send HTTP/1.1
 Host: 127.0.0.1:3000
 Content-Type: application/json
-Content-Length: 36
 
 {
     "email": "jhon@example.com"
@@ -216,7 +213,6 @@ Content-Length: 36
 POST /api/v1/user/request-forgot-password HTTP/1.1
 Host: 127.0.0.1:3000
 Content-Type: application/json
-Content-Length: 36
 
 {
     "email": "jhon@example.com"
@@ -229,7 +225,6 @@ Content-Length: 36
 POST /api/v1/auth HTTP/1.1
 Host: 127.0.0.1:3000
 Content-Type: application/json
-Content-Length: 69
 
 {
 "email": "jhon@example.com",
