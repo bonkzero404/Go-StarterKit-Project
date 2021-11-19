@@ -2,6 +2,7 @@ package handlers
 
 import (
 	respModel "go-boilerplate-clean-arch/domain/models"
+	"go-boilerplate-clean-arch/domain/stores"
 	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
 	"go-boilerplate-clean-arch/modules/user/domain/models"
 	"go-boilerplate-clean-arch/utils"
@@ -91,7 +92,7 @@ func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 		return utils.ApiErrorValidation(c, "Error validation request", errors)
 	}
 
-	response, err := handler.UserService.CreateUserActivation(request.Email, "activation_code")
+	response, err := handler.UserService.CreateUserActivation(request.Email, stores.ACTIVATION_CODE)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
@@ -117,7 +118,7 @@ func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 		return utils.ApiErrorValidation(c, "Error validation request", errors)
 	}
 
-	response, err := handler.UserService.CreateUserActivation(request.Email, "forgot_password")
+	response, err := handler.UserService.CreateUserActivation(request.Email, stores.FORGOT_PASSWORD)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)

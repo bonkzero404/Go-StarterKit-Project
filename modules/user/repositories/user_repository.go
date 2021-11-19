@@ -79,7 +79,6 @@ func (repository UserRepository) UpdateUserActivation(id string, stat bool) (*st
 }
 
 func (repository UserRepository) CreateUserActivation(userActivate *stores.UserActivation) (*stores.UserActivation, error) {
-
 	if err := repository.DB.Create(&userActivate).Error; err != nil {
 		return &stores.UserActivation{}, err
 	}
@@ -101,4 +100,20 @@ func (repository UserRepository) UpdatePassword(id string, password string) (*st
 	}
 
 	return user, nil
+}
+
+func (repository UserRepository) UpdateActivationCodeUsed(userId string, code string) (*stores.UserActivation, error) {
+	var userAct *stores.UserActivation
+
+	if err := repository.DB.First(&userAct, "user_id = ? AND code = ?", userId, code).Error; err != nil {
+		return &stores.UserActivation{}, err
+	}
+
+	userAct.IsUsed = true
+
+	if err := repository.DB.Save(&userAct).Error; err != nil {
+		return &stores.UserActivation{}, err
+	}
+
+	return userAct, nil
 }

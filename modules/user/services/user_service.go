@@ -6,6 +6,7 @@ import (
 	"go-boilerplate-clean-arch/domain/stores"
 	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
 	"go-boilerplate-clean-arch/modules/user/domain/models"
+	"go-boilerplate-clean-arch/modules/user/services/factories"
 	"go-boilerplate-clean-arch/utils"
 	"strings"
 	"time"
@@ -16,11 +17,13 @@ import (
 
 type UserService struct {
 	UserRepository interfaces.UserRepositoryInterface
+	ActionFactory  factories.ActionFactoryInterface
 }
 
-func NewUserService(userRepository interfaces.UserRepositoryInterface) interfaces.UserServiceInterface {
+func NewUserService(userRepository interfaces.UserRepositoryInterface, factory factories.ActionFactoryInterface) interfaces.UserServiceInterface {
 	return &UserService{
 		UserRepository: userRepository,
+		ActionFactory:  factory,
 	}
 }
 
@@ -124,6 +127,8 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 		}
 	}
 
+	service.UserRepository.UpdateActivationCodeUsed(user.ID.String(), code)
+
 	response := models.UserCreateResponse{
 		ID:       userNew.ID.String(),
 		FullName: userNew.FullName,
@@ -135,7 +140,7 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 	return &response, nil
 }
 
-func (service UserService) CreateUserActivation(email string, actType string) (map[string]interface{}, error) {
+func (service UserService) CreateUserActivation(email string, actType stores.ActivationType) (map[string]interface{}, error) {
 	user, errUser := service.UserRepository.FindUserByEmail(email)
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
@@ -145,71 +150,77 @@ func (service UserService) CreateUserActivation(email string, actType string) (m
 		}
 	}
 
-	if user.IsActive && actType == "activation_code" {
+	if user.IsActive && actType == stores.ACTIVATION_CODE {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "User already active",
 		}
 	}
 
-	var userActivate stores.UserActivation
-	codeGen := utils.StringWithCharset(32)
+	_, errActFactory := service.ActionFactory.Create(actType, user)
 
-	if actType == "forgot_password" {
-		userActivate = stores.UserActivation{
-			UserId:  user.ID,
-			Code:    codeGen,
-			ActType: stores.FORGOT_PASSWORD,
-		}
-	} else {
-		userActivate = stores.UserActivation{
-			UserId:  user.ID,
-			Code:    codeGen,
-			ActType: stores.ACTIVATION_CODE,
-		}
+	if errActFactory != nil {
+		return nil, errActFactory
 	}
 
-	_, errRecreate := service.UserRepository.CreateUserActivation(&userActivate)
+	// var userActivate stores.UserActivation
+	// codeGen := utils.StringWithCharset(32)
 
-	if errRecreate != nil {
-		if actType == "forgot_password" {
-			return nil, &respModel.ApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    "Failed to create forgot password, please try again",
-			}
-		}
+	// if actType == "forgot_password" {
+	// 	userActivate = stores.UserActivation{
+	// 		UserId:  user.ID,
+	// 		Code:    codeGen,
+	// 		ActType: stores.FORGOT_PASSWORD,
+	// 	}
+	// } else {
+	// 	userActivate = stores.UserActivation{
+	// 		UserId:  user.ID,
+	// 		Code:    codeGen,
+	// 		ActType: stores.ACTIVATION_CODE,
+	// 	}
+	// }
 
-		return nil, &respModel.ApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Failed to re create activation user, please try again",
-		}
-	}
+	// _, errRecreate := service.UserRepository.CreateUserActivation(&userActivate)
 
-	if actType == "forgot_password" {
-		sendMail := respModel.Mail{
-			To:           []string{user.Email},
-			Subject:      "Forgot Password",
-			TemplateHtml: "user_forgot_password.html",
-			BodyParam: map[string]interface{}{
-				"Name": user.FullName,
-				"Code": codeGen,
-			},
-		}
+	// if errRecreate != nil {
+	// 	if actType == "forgot_password" {
+	// 		return nil, &respModel.ApiErrorResponse{
+	// 			StatusCode: fiber.StatusUnprocessableEntity,
+	// 			Message:    "Failed to create forgot password, please try again",
+	// 		}
+	// 	}
 
-		utils.SendMail(&sendMail)
-	} else {
-		sendMail := respModel.Mail{
-			To:           []string{user.Email},
-			Subject:      "User Activation",
-			TemplateHtml: "user_activation.html",
-			BodyParam: map[string]interface{}{
-				"Name": user.FullName,
-				"Code": codeGen,
-			},
-		}
+	// 	return nil, &respModel.ApiErrorResponse{
+	// 		StatusCode: fiber.StatusUnprocessableEntity,
+	// 		Message:    "Failed to re create activation user, please try again",
+	// 	}
+	// }
 
-		utils.SendMail(&sendMail)
-	}
+	// if actType == "forgot_password" {
+	// 	sendMail := respModel.Mail{
+	// 		To:           []string{user.Email},
+	// 		Subject:      "Forgot Password",
+	// 		TemplateHtml: "user_forgot_password.html",
+	// 		BodyParam: map[string]interface{}{
+	// 			"Name": user.FullName,
+	// 			"Code": codeGen,
+	// 		},
+	// 	}
+
+	// 	utils.SendMail(&sendMail)
+	// } else {
+	// 	sendMail := respModel.Mail{
+	// 		To:           []string{user.Email},
+	// 		Subject:      "User Activation",
+	// 		TemplateHtml: "user_activation.html",
+	// 		BodyParam: map[string]interface{}{
+	// 			"Name": user.FullName,
+	// 			"Code": codeGen,
+	// 		},
+	// 	}
+
+	// 	utils.SendMail(&sendMail)
+	// }
 
 	return map[string]interface{}{}, nil
 }
@@ -240,6 +251,13 @@ func (service UserService) UpdatePassword(forgotPassReq *models.UserForgotPassAc
 		}
 	}
 
+	if checkActivationCode.IsUsed {
+		return nil, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    "Password reset code has been used",
+		}
+	}
+
 	t := time.Now()
 
 	if checkActivationCode.ExpiredAt.Before(t) {
@@ -252,6 +270,7 @@ func (service UserService) UpdatePassword(forgotPassReq *models.UserForgotPassAc
 	go func() {
 		hashPassword, _ := utils.HashPassword(user.Password)
 		service.UserRepository.UpdatePassword(user.ID.String(), hashPassword)
+		service.UserRepository.UpdateActivationCodeUsed(user.ID.String(), forgotPassReq.Code)
 	}()
 
 	return map[string]interface{}{}, nil
