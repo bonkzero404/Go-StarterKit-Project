@@ -163,65 +163,6 @@ func (service UserService) CreateUserActivation(email string, actType stores.Act
 		return nil, errActFactory
 	}
 
-	// var userActivate stores.UserActivation
-	// codeGen := utils.StringWithCharset(32)
-
-	// if actType == "forgot_password" {
-	// 	userActivate = stores.UserActivation{
-	// 		UserId:  user.ID,
-	// 		Code:    codeGen,
-	// 		ActType: stores.FORGOT_PASSWORD,
-	// 	}
-	// } else {
-	// 	userActivate = stores.UserActivation{
-	// 		UserId:  user.ID,
-	// 		Code:    codeGen,
-	// 		ActType: stores.ACTIVATION_CODE,
-	// 	}
-	// }
-
-	// _, errRecreate := service.UserRepository.CreateUserActivation(&userActivate)
-
-	// if errRecreate != nil {
-	// 	if actType == "forgot_password" {
-	// 		return nil, &respModel.ApiErrorResponse{
-	// 			StatusCode: fiber.StatusUnprocessableEntity,
-	// 			Message:    "Failed to create forgot password, please try again",
-	// 		}
-	// 	}
-
-	// 	return nil, &respModel.ApiErrorResponse{
-	// 		StatusCode: fiber.StatusUnprocessableEntity,
-	// 		Message:    "Failed to re create activation user, please try again",
-	// 	}
-	// }
-
-	// if actType == "forgot_password" {
-	// 	sendMail := respModel.Mail{
-	// 		To:           []string{user.Email},
-	// 		Subject:      "Forgot Password",
-	// 		TemplateHtml: "user_forgot_password.html",
-	// 		BodyParam: map[string]interface{}{
-	// 			"Name": user.FullName,
-	// 			"Code": codeGen,
-	// 		},
-	// 	}
-
-	// 	utils.SendMail(&sendMail)
-	// } else {
-	// 	sendMail := respModel.Mail{
-	// 		To:           []string{user.Email},
-	// 		Subject:      "User Activation",
-	// 		TemplateHtml: "user_activation.html",
-	// 		BodyParam: map[string]interface{}{
-	// 			"Name": user.FullName,
-	// 			"Code": codeGen,
-	// 		},
-	// 	}
-
-	// 	utils.SendMail(&sendMail)
-	// }
-
 	return map[string]interface{}{}, nil
 }
 
