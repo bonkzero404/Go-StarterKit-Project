@@ -164,3 +164,92 @@ make watch
 ```
 
 This command has a "hot reload" feature, but you will need the <b>reflect</b> library to run the command
+
+# API Specifications
+
+## Register User
+
+```http
+POST /api/v1/user/register HTTP/1.1
+Host: 127.0.0.1:3000
+Content-Type: application/json
+Content-Length: 133
+
+{
+    "full_name": "Jhon Doe",
+    "email": "jhon@example.com",
+    "phone": "17287817212",
+    "password": "mylongpassword"
+}
+```
+
+## Activation User
+
+```http
+POST /api/v1/user/activation HTTP/1.1
+Host: 127.0.0.1:3000
+Content-Type: application/json
+Content-Length: 85
+
+{
+    "email": "jhon@example.com",
+    "code": "XHHuRNyX2Gq4C1LiIEkO32EbQoPBvQhF"
+}
+```
+
+## Re-Send Activation Code
+
+```http
+POST /api/v1/user/activation/re-send HTTP/1.1
+Host: 127.0.0.1:3000
+Content-Type: application/json
+Content-Length: 36
+
+{
+    "email": "jhon@example.com"
+}
+```
+
+## Request Forgot Password
+
+```http
+POST /api/v1/user/request-forgot-password HTTP/1.1
+Host: 127.0.0.1:3000
+Content-Type: application/json
+Content-Length: 36
+
+{
+    "email": "jhon@example.com"
+}
+```
+
+## Authentication
+
+```http
+POST /api/v1/auth HTTP/1.1
+Host: 127.0.0.1:3000
+Content-Type: application/json
+Content-Length: 69
+
+{
+"email": "jhon@example.com",
+"password": "mylongpassword"
+}
+
+```
+
+## Get Profile
+
+```http
+GET /api/v1/auth/me HTTP/1.1
+Host: 127.0.0.1:3000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mzc1NzUwNDMsImlkIjoiNTk1ZWY0N2UtZThkOS00MjZjLThmNzItMjk2NjFiNjRlN2JlIn0.ChyYZB_DJofyZhN7BuPFT8NeX3AEyfKNbZp1YVba8Fw
+```
+
+## Refresh Token
+
+```http
+GET /api/v1/auth/refresh-token HTTP/1.1
+Host: 127.0.0.1:3000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mzc1NzUwNDMsImlkIjoiNTk1ZWY0N2UtZThkOS00MjZjLThmNzItMjk2NjFiNjRlN2JlIn0.ChyYZB_DJofyZhN7BuPFT8NeX3AEyfKNbZp1YVba8Fw
+```
