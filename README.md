@@ -19,9 +19,7 @@ From Uncle Bob’s Architecture we can divide our code in 4 layers :
 -   Controller: the software in this layer is a set of adapters that convert data from the format most convenient for the use cases and entities, to the format most convenient for some external agency such as the Database or the Web
 -   Framework & Driver: this layer is generally composed of frameworks and tools such as the Database, the Web Framework, etc.
 
-> In this project trying to implement a clean architecture using uncle bob's method, it's not 100% correct for implementation process, there are still scattered files for the <b>UseCase</b>, but their have the same approach, afterwards in this project the unit test has not been implemented.
-
-> This project uses a modular approach to isolate features, making them easier to manage.
+> In this project trying to implement a clean architecture using uncle bob method, this project uses a modular approach to isolate features, it makes it easier to manage, but keep the same approach.
 
 So this is the existing file structure in this project.
 
@@ -216,6 +214,22 @@ Content-Type: application/json
 
 {
     "email": "jhon@example.com"
+}
+```
+
+## Forgot Password
+
+```http
+POST /api/v1/user/forgot-password HTTP/1.1
+Host: 127.0.0.1:3000
+Content-Type: application/json
+Content-Length: 158
+
+{
+    "email": "jhon2@gmail.com",
+    "password": "janitrapanji",
+    "repeat_password": "janitrapanji",
+    "code": "u6BiYwbWRthBCa4r0HcUQjdcTaa70tyo"
 }
 ```
 
