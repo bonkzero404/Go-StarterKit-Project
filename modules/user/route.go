@@ -20,4 +20,6 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 	user.Post("/register", middleware.RateLimiter(5, 30), handler.UserHandler.RegisterUser)
 
 	user.Post("/activation", middleware.RateLimiter(5, 30), handler.UserHandler.UserActivation)
+
+	user.Post("/activation/re-send", middleware.RateLimiter(5, 30), handler.UserHandler.ReCreateUserActivation)
 }

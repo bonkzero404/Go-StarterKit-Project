@@ -77,3 +77,12 @@ func (repository UserRepository) UpdateUserActivation(id string, stat bool) (*st
 
 	return user, nil
 }
+
+func (repository UserRepository) ReCreateUserActivation(userActivate *stores.UserActivation) (*stores.UserActivation, error) {
+
+	if err := repository.DB.Create(&userActivate).Error; err != nil {
+		return &stores.UserActivation{}, err
+	}
+
+	return userActivate, nil
+}

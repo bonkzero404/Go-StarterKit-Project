@@ -14,4 +14,6 @@ type UserRepositoryInterface interface {
 	FindUserActivationCode(userId string, code string) (*stores.UserActivation, error)
 
 	UpdateUserActivation(id string, stat bool) (*stores.User, error)
+
+	ReCreateUserActivation(userActivate *stores.UserActivation) (*stores.UserActivation, error)
 }

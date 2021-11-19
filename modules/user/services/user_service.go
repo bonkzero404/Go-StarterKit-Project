@@ -134,3 +134,51 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 	return &response, nil
 
 }
+
+func (service UserService) ReCreateUserActivation(email string) (map[string]interface{}, error) {
+	user, errUser := service.UserRepository.FindUserByEmail(email)
+
+	if errors.Is(errUser, gorm.ErrRecordNotFound) {
+		return nil, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusNotFound,
+			Message:    "User not found",
+		}
+	}
+
+	if user.IsActive {
+		return nil, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    "User already active",
+		}
+	}
+
+	activationCode := utils.StringWithCharset(32)
+
+	userActivate := stores.UserActivation{
+		UserId: user.ID,
+		Code:   activationCode,
+	}
+
+	_, errRecreate := service.UserRepository.ReCreateUserActivation(&userActivate)
+
+	if errRecreate != nil {
+		return nil, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    "Failed to re create activation user, please try again",
+		}
+	}
+
+	sendMail := respModel.Mail{
+		To:           []string{user.Email},
+		Subject:      "User Activation",
+		TemplateHtml: "user_activation.html",
+		BodyParam: map[string]interface{}{
+			"Name": user.FullName,
+			"Code": activationCode,
+		},
+	}
+
+	utils.SendMail(&sendMail)
+
+	return map[string]interface{}{}, nil
+}
