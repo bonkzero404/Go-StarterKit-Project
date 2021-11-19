@@ -86,3 +86,19 @@ func (repository UserRepository) CreateUserActivation(userActivate *stores.UserA
 
 	return userActivate, nil
 }
+
+func (repository UserRepository) UpdatePassword(id string, password string) (*stores.User, error) {
+	var user *stores.User
+
+	if err := repository.DB.First(&user, "id = ?", id).Error; err != nil {
+		return &stores.User{}, err
+	}
+
+	user.Password = password
+
+	if err := repository.DB.Save(&user).Error; err != nil {
+		return &stores.User{}, err
+	}
+
+	return user, nil
+}

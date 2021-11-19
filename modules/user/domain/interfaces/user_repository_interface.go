@@ -16,4 +16,6 @@ type UserRepositoryInterface interface {
 	UpdateUserActivation(id string, stat bool) (*stores.User, error)
 
 	CreateUserActivation(userActivate *stores.UserActivation) (*stores.UserActivation, error)
+
+	UpdatePassword(id string, password string) (*stores.User, error)
 }

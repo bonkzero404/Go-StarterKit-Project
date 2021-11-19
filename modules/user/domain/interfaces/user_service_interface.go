@@ -10,4 +10,6 @@ type UserServiceInterface interface {
 	UserActivation(email string, code string) (*models.UserCreateResponse, error)
 
 	CreateUserActivation(email string, actType string) (map[string]interface{}, error)
+
+	UpdatePassword(forgotPassReq *models.UserForgotPassActRequest) (map[string]interface{}, error)
 }

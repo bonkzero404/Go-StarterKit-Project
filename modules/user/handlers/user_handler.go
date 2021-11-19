@@ -126,3 +126,32 @@ func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 
 	return utils.ApiCreated(c, "Forgot password code was sent to your email", response)
 }
+
+func (handler *UserHandler) UpdatePassword(c *fiber.Ctx) error {
+	var request models.UserForgotPassActRequest
+
+	if err := c.BodyParser(&request); err != nil {
+		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
+	}
+
+	userValidation := models.UserForgotPassActValidation{
+		Email:          request.Email,
+		Password:       request.Password,
+		RepeatPassword: request.RepeatPassword,
+		Code:           request.Code,
+	}
+
+	errors := utils.ValidateStruct(userValidation)
+	if errors != nil {
+		return utils.ApiErrorValidation(c, "Error validation request", errors)
+	}
+
+	response, err := handler.UserService.UpdatePassword(&request)
+
+	if err != nil {
+		re := err.(*respModel.ApiErrorResponse)
+		return utils.ApiResponseError(c, "Failed to create new password", re.StatusCode, err)
+	}
+
+	return utils.ApiCreated(c, "Successfuly to create new password", response)
+}

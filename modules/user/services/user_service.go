@@ -213,3 +213,46 @@ func (service UserService) CreateUserActivation(email string, actType string) (m
 
 	return map[string]interface{}{}, nil
 }
+
+func (service UserService) UpdatePassword(forgotPassReq *models.UserForgotPassActRequest) (map[string]interface{}, error) {
+	if forgotPassReq.Password != forgotPassReq.RepeatPassword {
+		return nil, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    "Password validation does not match",
+		}
+	}
+
+	user, errUser := service.UserRepository.FindUserByEmail(forgotPassReq.Email)
+
+	if errors.Is(errUser, gorm.ErrRecordNotFound) {
+		return nil, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusNotFound,
+			Message:    "User not found",
+		}
+	}
+
+	checkActivationCode, errAct := service.UserRepository.FindUserActivationCode(user.ID.String(), forgotPassReq.Code)
+
+	if errors.Is(errAct, gorm.ErrRecordNotFound) {
+		return nil, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusNotFound,
+			Message:    "Activation code not found",
+		}
+	}
+
+	t := time.Now()
+
+	if checkActivationCode.ExpiredAt.Before(t) {
+		return nil, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusGone,
+			Message:    "The activation code has expired",
+		}
+	}
+
+	go func() {
+		hashPassword, _ := utils.HashPassword(user.Password)
+		service.UserRepository.UpdatePassword(user.ID.String(), hashPassword)
+	}()
+
+	return map[string]interface{}{}, nil
+}
