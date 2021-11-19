@@ -31,7 +31,13 @@ func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.U
 		Password: hashPassword,
 	}
 
-	result, err := service.UserRepository.CreateUser(&userData)
+	activationCode := utils.StringWithCharset(32)
+
+	userAvtivate := stores.UserActivation{
+		Code: activationCode,
+	}
+
+	result, err := service.UserRepository.CreateUser(&userData, &userAvtivate)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate") {
@@ -46,6 +52,18 @@ func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.U
 			Message:    "Something went wrong with our server",
 		}
 	}
+
+	sendMail := respModel.Mail{
+		To:           []string{user.Email},
+		Subject:      "User Activation",
+		TemplateHtml: "user_activation.html",
+		BodyParam: map[string]interface{}{
+			"Name": user.FullName,
+			"Code": activationCode,
+		},
+	}
+
+	utils.SendMail(&sendMail)
 
 	response := models.UserCreateResponse{
 		ID:       userData.ID.String(),

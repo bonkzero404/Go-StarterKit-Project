@@ -7,5 +7,6 @@ import (
 func MigrateDB() {
 	DB.AutoMigrate(
 		&stores.User{},
+		&stores.UserActivation{},
 	)
 }

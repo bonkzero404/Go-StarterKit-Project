@@ -18,8 +18,14 @@ func NewUserRepository() interfaces.UserRepositoryInterface {
 	}
 }
 
-func (repository UserRepository) CreateUser(user *stores.User) (*stores.User, error) {
+func (repository UserRepository) CreateUser(user *stores.User, userActivate *stores.UserActivation) (*stores.User, error) {
 	if err := repository.DB.Create(&user).Error; err != nil {
+		return &stores.User{}, err
+	}
+
+	userActivate.UserId = user.ID
+
+	if err := repository.DB.Create(&userActivate).Error; err != nil {
 		return &stores.User{}, err
 	}
 

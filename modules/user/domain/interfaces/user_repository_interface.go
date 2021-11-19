@@ -5,7 +5,7 @@ import (
 )
 
 type UserRepositoryInterface interface {
-	CreateUser(user *stores.User) (*stores.User, error)
+	CreateUser(user *stores.User, userActivate *stores.UserActivation) (*stores.User, error)
 
 	FindUserByEmail(email string) (*stores.User, error)
 
