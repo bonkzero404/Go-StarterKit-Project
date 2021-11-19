@@ -1,6 +1,6 @@
 # GoLang Clean Architecture
 
-```
+```tree
 go-boilerplate-clean-arch
 ├── Makefile
 ├── README.md
