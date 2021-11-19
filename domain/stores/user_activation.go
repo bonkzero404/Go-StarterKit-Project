@@ -7,14 +7,21 @@ import (
 	"gorm.io/gorm"
 )
 
+type ActivationType string
+
+const (
+	ACTIVATION_CODE ActivationType = "ACTIVATION_CODE"
+	FORGOT_PASSWORD ActivationType = "FORGOT_PASSWORD"
+)
+
 type UserActivation struct {
 	gorm.Model
-	ID        uuid.UUID `gorm:"type:char(36);primary_key"`
-	UserId    uuid.UUID `gorm:"type:char(36):index"`
-	User      User      `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Code      string    `gorm:"type:char(32);index;not null"`
+	ID        uuid.UUID      `gorm:"type:char(36);primary_key"`
+	UserId    uuid.UUID      `gorm:"type:char(36):index"`
+	User      User           `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Code      string         `gorm:"type:char(32);index;not null"`
+	ActType   ActivationType `gorm:"type:char(30);index;not null"`
 	ExpiredAt *time.Time
-	IsUsed    bool
 }
 
 func (*UserActivation) BeforeCreate(tx *gorm.DB) error {

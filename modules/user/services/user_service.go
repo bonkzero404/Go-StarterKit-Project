@@ -37,7 +37,8 @@ func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.U
 	activationCode := utils.StringWithCharset(32)
 
 	userAvtivate := stores.UserActivation{
-		Code: activationCode,
+		Code:    activationCode,
+		ActType: stores.ACTIVATION_CODE,
 	}
 
 	result, err := service.UserRepository.CreateUser(&userData, &userAvtivate)
@@ -132,10 +133,9 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 	}
 
 	return &response, nil
-
 }
 
-func (service UserService) ReCreateUserActivation(email string) (map[string]interface{}, error) {
+func (service UserService) CreateUserActivation(email string, actType string) (map[string]interface{}, error) {
 	user, errUser := service.UserRepository.FindUserByEmail(email)
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
@@ -145,40 +145,71 @@ func (service UserService) ReCreateUserActivation(email string) (map[string]inte
 		}
 	}
 
-	if user.IsActive {
+	if user.IsActive && actType == "activation_code" {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "User already active",
 		}
 	}
 
-	activationCode := utils.StringWithCharset(32)
+	var userActivate stores.UserActivation
+	codeGen := utils.StringWithCharset(32)
 
-	userActivate := stores.UserActivation{
-		UserId: user.ID,
-		Code:   activationCode,
+	if actType == "forgot_password" {
+		userActivate = stores.UserActivation{
+			UserId:  user.ID,
+			Code:    codeGen,
+			ActType: stores.FORGOT_PASSWORD,
+		}
+	} else {
+		userActivate = stores.UserActivation{
+			UserId:  user.ID,
+			Code:    codeGen,
+			ActType: stores.ACTIVATION_CODE,
+		}
 	}
 
-	_, errRecreate := service.UserRepository.ReCreateUserActivation(&userActivate)
+	_, errRecreate := service.UserRepository.CreateUserActivation(&userActivate)
 
 	if errRecreate != nil {
+		if actType == "forgot_password" {
+			return nil, &respModel.ApiErrorResponse{
+				StatusCode: fiber.StatusUnprocessableEntity,
+				Message:    "Failed to create forgot password, please try again",
+			}
+		}
+
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Failed to re create activation user, please try again",
 		}
 	}
 
-	sendMail := respModel.Mail{
-		To:           []string{user.Email},
-		Subject:      "User Activation",
-		TemplateHtml: "user_activation.html",
-		BodyParam: map[string]interface{}{
-			"Name": user.FullName,
-			"Code": activationCode,
-		},
-	}
+	if actType == "forgot_password" {
+		sendMail := respModel.Mail{
+			To:           []string{user.Email},
+			Subject:      "Forgot Password",
+			TemplateHtml: "user_forgot_password.html",
+			BodyParam: map[string]interface{}{
+				"Name": user.FullName,
+				"Code": codeGen,
+			},
+		}
 
-	utils.SendMail(&sendMail)
+		utils.SendMail(&sendMail)
+	} else {
+		sendMail := respModel.Mail{
+			To:           []string{user.Email},
+			Subject:      "User Activation",
+			TemplateHtml: "user_activation.html",
+			BodyParam: map[string]interface{}{
+				"Name": user.FullName,
+				"Code": codeGen,
+			},
+		}
+
+		utils.SendMail(&sendMail)
+	}
 
 	return map[string]interface{}{}, nil
 }

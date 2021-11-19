@@ -91,7 +91,7 @@ func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 		return utils.ApiErrorValidation(c, "Error validation request", errors)
 	}
 
-	response, err := handler.UserService.ReCreateUserActivation(request.Email)
+	response, err := handler.UserService.CreateUserActivation(request.Email, "activation_code")
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
@@ -99,4 +99,30 @@ func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 	}
 
 	return utils.ApiCreated(c, "Code activation was sent to your email", response)
+}
+
+func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
+	var request models.UserForgotPassRequest
+
+	if err := c.BodyParser(&request); err != nil {
+		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
+	}
+
+	userValidation := models.UserForgotPassValidation{
+		Email: request.Email,
+	}
+
+	errors := utils.ValidateStruct(userValidation)
+	if errors != nil {
+		return utils.ApiErrorValidation(c, "Error validation request", errors)
+	}
+
+	response, err := handler.UserService.CreateUserActivation(request.Email, "forgot_password")
+
+	if err != nil {
+		re := err.(*respModel.ApiErrorResponse)
+		return utils.ApiResponseError(c, "Error create activation forgot password", re.StatusCode, err)
+	}
+
+	return utils.ApiCreated(c, "Forgot password code was sent to your email", response)
 }

@@ -22,4 +22,6 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 	user.Post("/activation", middleware.RateLimiter(5, 30), handler.UserHandler.UserActivation)
 
 	user.Post("/activation/re-send", middleware.RateLimiter(5, 30), handler.UserHandler.ReCreateUserActivation)
+
+	user.Post("/request-forgot-password", middleware.RateLimiter(5, 30), handler.UserHandler.CreateActivationForgotPassword)
 }
