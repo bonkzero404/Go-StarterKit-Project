@@ -1,6 +1,8 @@
 # GoLang Clean Architecture
 
-If you have read through the article Uncle bob, he said that: > Each has at least one layer for business rules, and another for interfaces.
+If you have read through the article Uncle bob, he said that:
+
+> Each has at least one layer for business rules, and another for interfaces.
 
 So, each of these architectures produce systems that are:
 
@@ -17,7 +19,9 @@ From Uncle Bob’s Architecture we can divide our code in 4 layers :
 -   Controller: the software in this layer is a set of adapters that convert data from the format most convenient for the use cases and entities, to the format most convenient for some external agency such as the Database or the Web
 -   Framework & Driver: this layer is generally composed of frameworks and tools such as the Database, the Web Framework, etc.
 
-> In this project trying to implement a clean architecture using uncle bob's method, it is not 100% correct in the implementation process, there are still scattered files for the usercase, but their have the same approach, afterwards in this project the unit test has not been implemented.
+> In this project trying to implement a clean architecture using uncle bob's method, it's not 100% correct for implementation process, there are still scattered files for the <b>UseCase</b>, but their have the same approach, afterwards in this project the unit test has not been implemented.
+
+> This project uses a modular approach to isolate features, making them easier to manage.
 
 So this is the existing file structure in this project.
 
