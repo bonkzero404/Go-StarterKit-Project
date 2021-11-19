@@ -42,6 +42,13 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 		}
 	}
 
+	if !user.IsActive {
+		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusForbidden,
+			Message:    "User is not active, please activate the user first",
+		}
+	}
+
 	match := utils.CheckPasswordHash(auth.Password, user.Password)
 
 	if !match {
