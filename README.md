@@ -226,9 +226,9 @@ Content-Type: application/json
 Content-Length: 158
 
 {
-    "email": "jhon2@gmail.com",
-    "password": "janitrapanji",
-    "repeat_password": "janitrapanji",
+    "email": "jhon@example.com",
+    "password": "mychangepassword",
+    "repeat_password": "mychangepassword",
     "code": "u6BiYwbWRthBCa4r0HcUQjdcTaa70tyo"
 }
 ```
@@ -241,8 +241,8 @@ Host: 127.0.0.1:3000
 Content-Type: application/json
 
 {
-"email": "jhon@example.com",
-"password": "mylongpassword"
+    "email": "jhon@example.com",
+    "password": "mylongpassword"
 }
 
 ```
