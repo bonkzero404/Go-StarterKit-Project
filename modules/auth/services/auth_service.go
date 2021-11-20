@@ -2,13 +2,12 @@ package services
 
 import (
 	"errors"
-	"go-boilerplate-clean-arch/config"
 	respModel "go-boilerplate-clean-arch/domain/models"
 	"go-boilerplate-clean-arch/modules/auth/domain/interfaces"
 	"go-boilerplate-clean-arch/modules/auth/domain/models"
 	userInterface "go-boilerplate-clean-arch/modules/user/domain/interfaces"
 	"go-boilerplate-clean-arch/utils"
-	"time"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
@@ -68,18 +67,8 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 		}
 	}
 
-	// Set token JWT Claims
-	exp := time.Now().Add(time.Hour * 72).Unix()
-	claims := jwt.MapClaims{
-		"id":  user.ID.String(),
-		"exp": exp,
-	}
-
-	// Create token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// Check if there is an error in creating the token
-	t, errToken := token.SignedString([]byte(config.Config("JWT_SECRET")))
+	token, exp, errToken := utils.CreateToken(user.ID.String())
+	log.Println(token)
 	if errToken != nil {
 		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
@@ -94,7 +83,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 		Email:    user.Email,
 		Phone:    user.Phone,
 		IsActive: user.IsActive,
-		Token:    t,
+		Token:    token,
 		Exp:      exp,
 	}
 
@@ -147,16 +136,7 @@ func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*models.UserAuthR
 		}
 	}
 
-	// Recreate token
-	exp := time.Now().Add(time.Hour * 72).Unix()
-	claims := jwt.MapClaims{
-		"id":  user.ID.String(),
-		"exp": exp,
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	t, errToken := token.SignedString([]byte(config.Config("JWT_SECRET")))
+	token, exp, errToken := utils.CreateToken(user.ID.String())
 	if errToken != nil {
 		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
@@ -171,7 +151,7 @@ func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*models.UserAuthR
 		Email:    user.Email,
 		Phone:    user.Phone,
 		IsActive: user.IsActive,
-		Token:    t,
+		Token:    token,
 		Exp:      exp,
 	}
 
