@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"go-boilerplate-clean-arch/domain/models"
+	"go-boilerplate-clean-arch/domain/data_models"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -10,13 +10,13 @@ import (
 This function is used to wrap a json response globally
 */
 func ApiWrapper(ctx *fiber.Ctx, message string, code int, status string, data interface{}) error {
-	meta := models.Meta{
+	meta := data_models.Meta{
 		Message: message,
 		Code:    code,
 		Status:  status,
 	}
 
-	responseJson := models.Response{
+	responseJson := data_models.Response{
 		Meta: meta,
 		Data: data,
 	}

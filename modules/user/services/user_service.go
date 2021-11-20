@@ -2,10 +2,10 @@ package services
 
 import (
 	"errors"
-	respModel "go-boilerplate-clean-arch/domain/models"
+	respModel "go-boilerplate-clean-arch/domain/data_models"
 	"go-boilerplate-clean-arch/domain/stores"
+	"go-boilerplate-clean-arch/modules/user/domain/data_models"
 	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
-	"go-boilerplate-clean-arch/modules/user/domain/models"
 	"go-boilerplate-clean-arch/modules/user/services/factories"
 	"go-boilerplate-clean-arch/utils"
 	"log"
@@ -37,7 +37,7 @@ func NewUserService(
 	}
 }
 
-func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.UserCreateResponse, error) {
+func (service UserService) CreateUser(user *data_models.UserCreateRequest) (*data_models.UserCreateResponse, error) {
 	hashPassword, _ := utils.HashPassword(user.Password)
 
 	userData := stores.User{
@@ -59,13 +59,13 @@ func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.U
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate") {
-			return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
+			return &data_models.UserCreateResponse{}, &respModel.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    "User already register",
 			}
 		}
 
-		return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Something went wrong with our server",
 		}
@@ -83,7 +83,7 @@ func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.U
 
 	utils.SendMail(&sendMail)
 
-	response := models.UserCreateResponse{
+	response := data_models.UserCreateResponse{
 		ID:       userData.ID.String(),
 		FullName: result.FullName,
 		Email:    result.Email,
@@ -94,7 +94,7 @@ func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.U
 	return &response, nil
 }
 
-func (service UserService) UserActivation(email string, code string) (*models.UserCreateResponse, error) {
+func (service UserService) UserActivation(email string, code string) (*data_models.UserCreateResponse, error) {
 	var user stores.User
 	var userAct stores.UserActivation
 
@@ -103,14 +103,14 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 	log.Println(user)
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    "User not found",
 		}
 	}
 
 	if user.IsActive {
-		return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "User already active",
 		}
@@ -119,7 +119,7 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 	errAct := service.UserActivationRepository.FindUserActivationCode(&userAct, user.ID.String(), code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
-		return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    "Activation code not found",
 		}
@@ -128,7 +128,7 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 	t := time.Now()
 
 	if userAct.ExpiredAt.Before(t) {
-		return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
 			Message:    "The activation code has expired",
 		}
@@ -137,7 +137,7 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 	userNew, errUserNew := service.RepositoryAggregate.UpdateUserActivation(user.ID.String(), true)
 
 	if errUserNew != nil {
-		return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Cannot activated user",
 		}
@@ -145,7 +145,7 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 
 	service.RepositoryAggregate.UpdateActivationCodeUsed(user.ID.String(), code)
 
-	response := models.UserCreateResponse{
+	response := data_models.UserCreateResponse{
 		ID:       userNew.ID.String(),
 		FullName: userNew.FullName,
 		Email:    userNew.Email,
@@ -185,7 +185,7 @@ func (service UserService) CreateUserActivation(email string, actType stores.Act
 	return map[string]interface{}{}, nil
 }
 
-func (service UserService) UpdatePassword(forgotPassReq *models.UserForgotPassActRequest) (map[string]interface{}, error) {
+func (service UserService) UpdatePassword(forgotPassReq *data_models.UserForgotPassActRequest) (map[string]interface{}, error) {
 	var user stores.User
 	var userAct stores.UserActivation
 

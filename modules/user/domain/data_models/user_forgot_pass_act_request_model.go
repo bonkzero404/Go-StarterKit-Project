@@ -1,4 +1,4 @@
-package models
+package data_models
 
 type UserForgotPassActRequest struct {
 	Email          string `json:"email"`

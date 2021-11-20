@@ -1,4 +1,4 @@
-package models
+package data_models
 
 type UserCreateRequestValidation struct {
 	FullName string `validate:"required,min=3"`

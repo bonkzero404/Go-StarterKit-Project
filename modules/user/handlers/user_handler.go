@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	respModel "go-boilerplate-clean-arch/domain/models"
+	respModel "go-boilerplate-clean-arch/domain/data_models"
 	"go-boilerplate-clean-arch/domain/stores"
+	"go-boilerplate-clean-arch/modules/user/domain/data_models"
 	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
-	"go-boilerplate-clean-arch/modules/user/domain/models"
 	"go-boilerplate-clean-arch/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,13 +21,13 @@ func NewUserHandler(userService interfaces.UserServiceInterface) *UserHandler {
 }
 
 func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
-	var request models.UserCreateRequest
+	var request data_models.UserCreateRequest
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
 	}
 
-	userValidation := models.UserCreateRequestValidation{
+	userValidation := data_models.UserCreateRequestValidation{
 		FullName: request.FullName,
 		Email:    request.Email,
 		Phone:    request.Phone,
@@ -50,13 +50,13 @@ func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
 }
 
 func (handler *UserHandler) UserActivation(c *fiber.Ctx) error {
-	var request models.UserActivationRequest
+	var request data_models.UserActivationRequest
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
 	}
 
-	userValidation := models.UserActivationRequestValidation{
+	userValidation := data_models.UserActivationRequestValidation{
 		Email: request.Email,
 		Code:  request.Code,
 	}
@@ -77,13 +77,13 @@ func (handler *UserHandler) UserActivation(c *fiber.Ctx) error {
 }
 
 func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
-	var request models.UserReActivationRequest
+	var request data_models.UserReActivationRequest
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
 	}
 
-	userValidation := models.UserReActivationValidation{
+	userValidation := data_models.UserReActivationValidation{
 		Email: request.Email,
 	}
 
@@ -103,13 +103,13 @@ func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 }
 
 func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
-	var request models.UserForgotPassRequest
+	var request data_models.UserForgotPassRequest
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
 	}
 
-	userValidation := models.UserForgotPassValidation{
+	userValidation := data_models.UserForgotPassValidation{
 		Email: request.Email,
 	}
 
@@ -129,13 +129,13 @@ func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 }
 
 func (handler *UserHandler) UpdatePassword(c *fiber.Ctx) error {
-	var request models.UserForgotPassActRequest
+	var request data_models.UserForgotPassActRequest
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
 	}
 
-	userValidation := models.UserForgotPassActValidation{
+	userValidation := data_models.UserForgotPassActValidation{
 		Email:          request.Email,
 		Password:       request.Password,
 		RepeatPassword: request.RepeatPassword,

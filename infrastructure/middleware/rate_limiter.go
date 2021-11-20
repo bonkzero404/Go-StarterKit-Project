@@ -4,7 +4,7 @@ import (
 	"go-boilerplate-clean-arch/utils"
 	"time"
 
-	respModel "go-boilerplate-clean-arch/domain/models"
+	respModel "go-boilerplate-clean-arch/domain/data_models"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"

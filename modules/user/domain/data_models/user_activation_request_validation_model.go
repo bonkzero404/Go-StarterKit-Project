@@ -1,4 +1,4 @@
-package models
+package data_models
 
 type UserActivationRequestValidation struct {
 	Email string `validate:"required,email"`

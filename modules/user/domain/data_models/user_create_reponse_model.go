@@ -1,6 +1,6 @@
-package models
+package data_models
 
-type UserAuthProfileResponse struct {
+type UserCreateResponse struct {
 	ID       string `json:"id"`
 	FullName string `json:"full_name"`
 	Email    string `json:"email"`

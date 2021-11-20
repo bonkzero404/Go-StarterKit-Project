@@ -1,4 +1,4 @@
-package aggregates
+package repositories
 
 import (
 	"go-boilerplate-clean-arch/domain/stores"
@@ -8,7 +8,6 @@ import (
 type RepositoryAggregate struct {
 	UserRepository interfaces.UserRepositoryInterface
 	UserActivationRepository interfaces.UserActivationRepositoryInterface
-
 }
 
 func NewRepositoryAggregate(

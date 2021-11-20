@@ -2,10 +2,10 @@ package services
 
 import (
 	"errors"
-	respModel "go-boilerplate-clean-arch/domain/models"
+	respModel "go-boilerplate-clean-arch/domain/data_models"
 	"go-boilerplate-clean-arch/domain/stores"
+	"go-boilerplate-clean-arch/modules/auth/domain/data_models"
 	"go-boilerplate-clean-arch/modules/auth/domain/interfaces"
-	"go-boilerplate-clean-arch/modules/auth/domain/models"
 	userInterface "go-boilerplate-clean-arch/modules/user/domain/interfaces"
 	"go-boilerplate-clean-arch/utils"
 	"log"
@@ -28,7 +28,7 @@ func NewAuthService(userRepository userInterface.UserRepositoryInterface) interf
 /**
 This function is used to handle authentication
 */
-func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.UserAuthResponse, error) {
+func (service AuthService) Authenticate(auth *data_models.UserAuthRequest) (*data_models.UserAuthResponse, error) {
 	var user stores.User
 
 	// Get user by email
@@ -37,7 +37,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 	// Check if the user is not found
 	// then displayan error message
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
 			Message:    "Invalid email or password",
 		}
@@ -45,7 +45,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 
 	// Check if a query operation error occurs
 	if errUser != nil {
-		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Something went wrong",
 		}
@@ -53,7 +53,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 
 	// Check if the user status is not active
 	if !user.IsActive {
-		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
 			Message:    "User is not active, please activate the user first",
 		}
@@ -64,7 +64,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 
 	// Check if it doesn't match, show an error message
 	if !match {
-		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
 			Message:    "Invalid email or password",
 		}
@@ -73,14 +73,14 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 	token, exp, errToken := utils.CreateToken(user.ID.String())
 	log.Println(token)
 	if errToken != nil {
-		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Error token",
 		}
 	}
 
 	// Set response message to succeed
-	response := models.UserAuthResponse{
+	response := data_models.UserAuthResponse{
 		ID:       user.ID.String(),
 		FullName: user.FullName,
 		Email:    user.Email,
@@ -96,7 +96,7 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 /**
 This function is used to authorize users and display logged in user data
 */
-func (service AuthService) GetProfile(id string) (*models.UserAuthProfileResponse, error) {
+func (service AuthService) GetProfile(id string) (*data_models.UserAuthProfileResponse, error) {
 	var user stores.User
 
 	// Get user from database
@@ -104,14 +104,14 @@ func (service AuthService) GetProfile(id string) (*models.UserAuthProfileRespons
 
 	// Check if there is a query error
 	if errUser != nil {
-		return &models.UserAuthProfileResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserAuthProfileResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Something went wrong",
 		}
 	}
 
 	// Set response message
-	response := models.UserAuthProfileResponse{
+	response := data_models.UserAuthProfileResponse{
 		ID:       user.ID.String(),
 		FullName: user.FullName,
 		Email:    user.Email,
@@ -125,7 +125,7 @@ func (service AuthService) GetProfile(id string) (*models.UserAuthProfileRespons
 /**
 This function is used to refresh token
 */
-func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*models.UserAuthResponse, error) {
+func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*data_models.UserAuthResponse, error) {
 	var user stores.User
 
 	// Get data from token then convert to string
@@ -137,7 +137,7 @@ func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*models.UserAuthR
 
 	// Check if something went wrong with query
 	if errUser != nil {
-		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Something went wrong",
 		}
@@ -145,14 +145,14 @@ func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*models.UserAuthR
 
 	token, exp, errToken := utils.CreateToken(user.ID.String())
 	if errToken != nil {
-		return &models.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &data_models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Error token",
 		}
 	}
 
 	// Set response message
-	response := models.UserAuthResponse{
+	response := data_models.UserAuthResponse{
 		ID:       user.ID.String(),
 		FullName: user.FullName,
 		Email:    user.Email,

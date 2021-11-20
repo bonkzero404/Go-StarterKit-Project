@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	respModel "go-boilerplate-clean-arch/domain/models"
+	respModel "go-boilerplate-clean-arch/domain/data_models"
+	"go-boilerplate-clean-arch/modules/auth/domain/data_models"
 	"go-boilerplate-clean-arch/modules/auth/domain/interfaces"
-	"go-boilerplate-clean-arch/modules/auth/domain/models"
 	"go-boilerplate-clean-arch/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -24,13 +24,13 @@ func NewAuthHandler(authService interfaces.UserAuthServiceInterface) *AuthHandle
 Authentication handler
 */
 func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
-	var request models.UserAuthRequest
+	var request data_models.UserAuthRequest
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
 	}
 
-	userValidation := models.UserAuthValidation{
+	userValidation := data_models.UserAuthValidation{
 		EmailValid:    request.Email,
 		PasswordValid: request.Password,
 	}

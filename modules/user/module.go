@@ -1,7 +1,6 @@
 package user
 
 import (
-	"go-boilerplate-clean-arch/modules/user/aggregates"
 	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
 	"go-boilerplate-clean-arch/modules/user/handlers"
 	"go-boilerplate-clean-arch/modules/user/repositories"
@@ -28,7 +27,7 @@ func RegisterModule(app *fiber.App) {
 
 	userRepository := repositories.NewUserRepository()
 	userActivationRepository := repositories.NewUserActivationRepository()
-	aggregateRepository := aggregates.NewRepositoryAggregate(userRepository, userActivationRepository)
+	aggregateRepository := repositories.NewRepositoryAggregate(userRepository, userActivationRepository)
 
 	userActivationFactory := registerActivationFactory(userActivationRepository)
 

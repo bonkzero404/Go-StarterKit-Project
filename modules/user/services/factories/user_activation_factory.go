@@ -1,7 +1,7 @@
 package factories
 
 import (
-	respModel "go-boilerplate-clean-arch/domain/models"
+	respModel "go-boilerplate-clean-arch/domain/data_models"
 	"go-boilerplate-clean-arch/domain/stores"
 	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
 	"go-boilerplate-clean-arch/utils"

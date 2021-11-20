@@ -3,7 +3,7 @@ package utils
 import (
 	"bytes"
 	"go-boilerplate-clean-arch/config"
-	"go-boilerplate-clean-arch/domain/models"
+	"go-boilerplate-clean-arch/domain/data_models"
 	"html/template"
 	"log"
 	"strconv"
@@ -11,7 +11,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-func SendMail(data *models.Mail) {
+func SendMail(data *data_models.Mail) {
 	var mailFrom string = data.From
 
 	t := template.New(data.TemplateHtml)
