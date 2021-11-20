@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	respModel "go-boilerplate-clean-arch/domain/models"
+	"go-boilerplate-clean-arch/domain/stores"
 	"go-boilerplate-clean-arch/modules/auth/domain/interfaces"
 	"go-boilerplate-clean-arch/modules/auth/domain/models"
 	userInterface "go-boilerplate-clean-arch/modules/user/domain/interfaces"
@@ -28,8 +29,10 @@ func NewAuthService(userRepository userInterface.UserRepositoryInterface) interf
 This function is used to handle authentication
 */
 func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.UserAuthResponse, error) {
+	var user stores.User
+
 	// Get user by email
-	user, errUser := service.UserRepository.FindUserByEmail(auth.Email)
+	errUser := service.UserRepository.FindUserByEmail(&user, auth.Email).Error
 
 	// Check if the user is not found
 	// then displayan error message
@@ -94,8 +97,10 @@ func (service AuthService) Authenticate(auth *models.UserAuthRequest) (*models.U
 This function is used to authorize users and display logged in user data
 */
 func (service AuthService) GetProfile(id string) (*models.UserAuthProfileResponse, error) {
+	var user stores.User
+
 	// Get user from database
-	user, errUser := service.UserRepository.FindUserById(id)
+	errUser := service.UserRepository.FindUserById(&user, id).Error
 
 	// Check if there is a query error
 	if errUser != nil {
@@ -121,12 +126,14 @@ func (service AuthService) GetProfile(id string) (*models.UserAuthProfileRespons
 This function is used to refresh token
 */
 func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*models.UserAuthResponse, error) {
+	var user stores.User
+
 	// Get data from token then convert to string
 	beforeClaims := tokenUser.Claims.(jwt.MapClaims)
 	id := beforeClaims["id"].(string)
 
 	// Get user data
-	user, errUser := service.UserRepository.FindUserById(id)
+	errUser := service.UserRepository.FindUserById(&user, id).Error
 
 	// Check if something went wrong with query
 	if errUser != nil {

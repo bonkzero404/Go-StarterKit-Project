@@ -2,22 +2,18 @@ package interfaces
 
 import (
 	"go-boilerplate-clean-arch/domain/stores"
+
+	"gorm.io/gorm"
 )
 
 type UserRepositoryInterface interface {
-	CreateUser(user *stores.User, userActivate *stores.UserActivation) (*stores.User, error)
+	CreateUser(user *stores.User) *gorm.DB
 
-	FindUserByEmail(email string) (*stores.User, error)
+	UpdateUserIsActive(user *stores.User) *gorm.DB
 
-	FindUserById(id string) (*stores.User, error)
+	FindUserByEmail(user *stores.User, email string) *gorm.DB
 
-	FindUserActivationCode(userId string, code string) (*stores.UserActivation, error)
+	FindUserById(user *stores.User, id string) *gorm.DB
 
-	UpdateUserActivation(id string, stat bool) (*stores.User, error)
-
-	CreateUserActivation(userActivate *stores.UserActivation) (*stores.UserActivation, error)
-
-	UpdatePassword(id string, password string) (*stores.User, error)
-
-	UpdateActivationCodeUsed(userId string, code string) (*stores.UserActivation, error)
+	UpdatePassword(user *stores.User) *gorm.DB
 }

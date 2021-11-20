@@ -10,12 +10,14 @@ import (
 )
 
 type UserActivationServiceFactory struct {
-	UserRepository interfaces.UserRepositoryInterface
+	UserActivationRepository interfaces.UserActivationRepositoryInterface
 }
 
-func NewUserActivationServiceFactory(userRepository interfaces.UserRepositoryInterface) interfaces.UserActivationServiceFactoryInterface {
+func NewUserActivationServiceFactory(
+	userActivationRepository interfaces.UserActivationRepositoryInterface,
+) interfaces.UserActivationServiceFactoryInterface {
 	return &UserActivationServiceFactory{
-		UserRepository: userRepository,
+		UserActivationRepository: userActivationRepository,
 	}
 }
 
@@ -28,9 +30,7 @@ func (service UserActivationServiceFactory) CreateUserActivation(user *stores.Us
 		ActType: stores.ACTIVATION_CODE,
 	}
 
-	userAct, errRecreate := service.UserRepository.CreateUserActivation(&userActivate)
-
-	if errRecreate != nil {
+	if err := service.UserActivationRepository.CreateUserActivation(&userActivate).Error; err != nil {
 		return &stores.UserActivation{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Failed to re create activation user, please try again",
@@ -49,5 +49,5 @@ func (service UserActivationServiceFactory) CreateUserActivation(user *stores.Us
 
 	utils.SendMail(&sendMail)
 
-	return userAct, nil
+	return &userActivate, nil
 }

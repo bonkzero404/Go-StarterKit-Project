@@ -10,12 +10,12 @@ import (
 )
 
 type UserForgotPassServiceFactory struct {
-	UserRepository interfaces.UserRepositoryInterface
+	UserActivationRepository interfaces.UserActivationRepositoryInterface
 }
 
-func NewUserForgotPassServiceFactory(userRepository interfaces.UserRepositoryInterface) interfaces.UserForgotPassServiceFactoryInterface {
+func NewUserForgotPassServiceFactory(userActivationRepository interfaces.UserActivationRepositoryInterface) interfaces.UserForgotPassServiceFactoryInterface {
 	return &UserForgotPassServiceFactory{
-		UserRepository: userRepository,
+		UserActivationRepository: userActivationRepository,
 	}
 }
 
@@ -28,9 +28,7 @@ func (service UserForgotPassServiceFactory) CreateUserForgotPass(user *stores.Us
 		ActType: stores.FORGOT_PASSWORD,
 	}
 
-	userAct, errRecreate := service.UserRepository.CreateUserActivation(&userActivate)
-
-	if errRecreate != nil {
+	if err := service.UserActivationRepository.CreateUserActivation(&userActivate).Error; err != nil {
 		return &stores.UserActivation{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Failed to create forgot password, please try again",
@@ -49,5 +47,5 @@ func (service UserForgotPassServiceFactory) CreateUserForgotPass(user *stores.Us
 
 	utils.SendMail(&sendMail)
 
-	return userAct, nil
+	return &userActivate, nil
 }

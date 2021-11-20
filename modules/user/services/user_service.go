@@ -8,6 +8,7 @@ import (
 	"go-boilerplate-clean-arch/modules/user/domain/models"
 	"go-boilerplate-clean-arch/modules/user/services/factories"
 	"go-boilerplate-clean-arch/utils"
+	"log"
 	"strings"
 	"time"
 
@@ -17,12 +18,21 @@ import (
 
 type UserService struct {
 	UserRepository interfaces.UserRepositoryInterface
+	UserActivationRepository interfaces.UserActivationRepositoryInterface
+	RepositoryAggregate interfaces.RepositoryAggregateInterface
 	ActionFactory  factories.ActionFactoryInterface
 }
 
-func NewUserService(userRepository interfaces.UserRepositoryInterface, factory factories.ActionFactoryInterface) interfaces.UserServiceInterface {
+func NewUserService(
+	userRepository interfaces.UserRepositoryInterface,
+	userActivationRepository interfaces.UserActivationRepositoryInterface,
+	repositoryAggregate interfaces.RepositoryAggregateInterface,
+	factory factories.ActionFactoryInterface,
+) interfaces.UserServiceInterface {
 	return &UserService{
 		UserRepository: userRepository,
+		UserActivationRepository: userActivationRepository,
+		RepositoryAggregate: repositoryAggregate,
 		ActionFactory:  factory,
 	}
 }
@@ -44,7 +54,8 @@ func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.U
 		ActType: stores.ACTIVATION_CODE,
 	}
 
-	result, err := service.UserRepository.CreateUser(&userData, &userAvtivate)
+	result, err := service.RepositoryAggregate.CreateUser(&userData, &userAvtivate)
+
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate") {
@@ -84,7 +95,12 @@ func (service UserService) CreateUser(user *models.UserCreateRequest) (*models.U
 }
 
 func (service UserService) UserActivation(email string, code string) (*models.UserCreateResponse, error) {
-	user, errUser := service.UserRepository.FindUserByEmail(email)
+	var user stores.User
+	var userAct stores.UserActivation
+
+	errUser := service.UserRepository.FindUserByEmail(&user, email).Error
+
+	log.Println(user)
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
@@ -100,7 +116,7 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 		}
 	}
 
-	checkActivationCode, errAct := service.UserRepository.FindUserActivationCode(user.ID.String(), code)
+	errAct := service.UserActivationRepository.FindUserActivationCode(&userAct, user.ID.String(), code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
@@ -111,14 +127,14 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 
 	t := time.Now()
 
-	if checkActivationCode.ExpiredAt.Before(t) {
+	if userAct.ExpiredAt.Before(t) {
 		return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
 			Message:    "The activation code has expired",
 		}
 	}
 
-	userNew, errUserNew := service.UserRepository.UpdateUserActivation(user.ID.String(), true)
+	userNew, errUserNew := service.RepositoryAggregate.UpdateUserActivation(user.ID.String(), true)
 
 	if errUserNew != nil {
 		return &models.UserCreateResponse{}, &respModel.ApiErrorResponse{
@@ -127,7 +143,7 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 		}
 	}
 
-	service.UserRepository.UpdateActivationCodeUsed(user.ID.String(), code)
+	service.RepositoryAggregate.UpdateActivationCodeUsed(user.ID.String(), code)
 
 	response := models.UserCreateResponse{
 		ID:       userNew.ID.String(),
@@ -141,7 +157,10 @@ func (service UserService) UserActivation(email string, code string) (*models.Us
 }
 
 func (service UserService) CreateUserActivation(email string, actType stores.ActivationType) (map[string]interface{}, error) {
-	user, errUser := service.UserRepository.FindUserByEmail(email)
+	var user stores.User
+
+	errUser := service.UserRepository.FindUserByEmail(&user, email).Error
+
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &respModel.ApiErrorResponse{
@@ -157,7 +176,7 @@ func (service UserService) CreateUserActivation(email string, actType stores.Act
 		}
 	}
 
-	_, errActFactory := service.ActionFactory.Create(actType, user)
+	_, errActFactory := service.ActionFactory.Create(actType, &user)
 
 	if errActFactory != nil {
 		return nil, errActFactory
@@ -167,6 +186,9 @@ func (service UserService) CreateUserActivation(email string, actType stores.Act
 }
 
 func (service UserService) UpdatePassword(forgotPassReq *models.UserForgotPassActRequest) (map[string]interface{}, error) {
+	var user stores.User
+	var userAct stores.UserActivation
+
 	if forgotPassReq.Password != forgotPassReq.RepeatPassword {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
@@ -174,7 +196,7 @@ func (service UserService) UpdatePassword(forgotPassReq *models.UserForgotPassAc
 		}
 	}
 
-	user, errUser := service.UserRepository.FindUserByEmail(forgotPassReq.Email)
+	errUser := service.UserRepository.FindUserByEmail(&user, forgotPassReq.Email).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &respModel.ApiErrorResponse{
@@ -183,7 +205,7 @@ func (service UserService) UpdatePassword(forgotPassReq *models.UserForgotPassAc
 		}
 	}
 
-	checkActivationCode, errAct := service.UserRepository.FindUserActivationCode(user.ID.String(), forgotPassReq.Code)
+	errAct := service.UserActivationRepository.FindUserActivationCode(&userAct, user.ID.String(), forgotPassReq.Code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return nil, &respModel.ApiErrorResponse{
@@ -192,7 +214,7 @@ func (service UserService) UpdatePassword(forgotPassReq *models.UserForgotPassAc
 		}
 	}
 
-	if checkActivationCode.IsUsed {
+	if userAct.IsUsed {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "Password reset code has been used",
@@ -201,7 +223,7 @@ func (service UserService) UpdatePassword(forgotPassReq *models.UserForgotPassAc
 
 	t := time.Now()
 
-	if checkActivationCode.ExpiredAt.Before(t) {
+	if userAct.ExpiredAt.Before(t) {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
 			Message:    "The activation code has expired",
@@ -210,8 +232,16 @@ func (service UserService) UpdatePassword(forgotPassReq *models.UserForgotPassAc
 
 	go func() {
 		hashPassword, _ := utils.HashPassword(user.Password)
-		service.UserRepository.UpdatePassword(user.ID.String(), hashPassword)
-		service.UserRepository.UpdateActivationCodeUsed(user.ID.String(), forgotPassReq.Code)
+
+		userData := stores.User{
+			FullName: user.FullName,
+			Email:    user.Email,
+			Phone:    user.Phone,
+			Password: hashPassword,
+		}
+
+		service.UserRepository.UpdatePassword(&userData)
+		service.RepositoryAggregate.UpdateActivationCodeUsed(user.ID.String(), forgotPassReq.Code)
 	}()
 
 	return map[string]interface{}{}, nil
