@@ -8,7 +8,6 @@ import (
 	"go-boilerplate-clean-arch/modules/auth/domain/interfaces"
 	userInterface "go-boilerplate-clean-arch/modules/user/domain/interfaces"
 	"go-boilerplate-clean-arch/utils"
-	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
@@ -71,7 +70,7 @@ func (service AuthService) Authenticate(auth *data_models.UserAuthRequest) (*dat
 	}
 
 	token, exp, errToken := utils.CreateToken(user.ID.String())
-	log.Println(token)
+
 	if errToken != nil {
 		return &data_models.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,

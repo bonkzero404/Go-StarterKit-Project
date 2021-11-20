@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"go-boilerplate-clean-arch/infrastructure/middleware"
+	"go-boilerplate-clean-arch/app/middleware"
 	"go-boilerplate-clean-arch/modules/auth/handlers"
 	"go-boilerplate-clean-arch/utils"
 

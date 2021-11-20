@@ -1,7 +1,7 @@
 package user
 
 import (
-	"go-boilerplate-clean-arch/infrastructure/middleware"
+	"go-boilerplate-clean-arch/app/middleware"
 	"go-boilerplate-clean-arch/modules/user/handlers"
 	"go-boilerplate-clean-arch/utils"
 

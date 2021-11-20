@@ -1,8 +1,8 @@
 package repositories
 
 import (
+	"go-boilerplate-clean-arch/database/driver"
 	"go-boilerplate-clean-arch/domain/stores"
-	"go-boilerplate-clean-arch/infrastructure/database"
 	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
 
 	"gorm.io/gorm"
@@ -14,7 +14,7 @@ type UserRepository struct {
 
 func NewUserRepository() interfaces.UserRepositoryInterface {
 	return &UserRepository{
-		DB: database.DB,
+		DB: driver.DB,
 	}
 }
 

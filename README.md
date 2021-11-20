@@ -1,19 +1,26 @@
-# GoLang Clean Architecture
+# GoLang API StarterKit
 
-In this project trying to implement a clean architecture with modular based to isolate features, it makes it easier to manage.
+File structure in this project.
 
-So this is the existing file structure in this project.
-
-```tree
+```
 go-boilerplate-clean-arch
 ├── Makefile
 ├── README.md
 ├── app
-│   └── bootstrap.go
+│   ├── bootstrap.go
+│   └── middleware
+│       ├── authenticate.go
+│       └── rate_limiter.go
 ├── config
 │   └── config.go
+├── database
+│   ├── driver
+│   │   ├── connector.go
+│   │   ├── mysql.go
+│   │   └── postgresql.go
+│   └── migration.go
 ├── domain
-│   ├── models
+│   ├── data_models
 │   │   ├── mail_model.go
 │   │   └── response_model.go
 │   └── stores
@@ -21,26 +28,17 @@ go-boilerplate-clean-arch
 │       └── user_store.go
 ├── go.mod
 ├── go.sum
-├── infrastructure
-│   ├── database
-│   │   ├── connector.go
-│   │   ├── migration.go
-│   │   ├── mysql.go
-│   │   └── postgresql.go
-│   └── middleware
-│       ├── authenticate.go
-│       └── rate_limiter.go
 ├── main.go
 ├── modules
 │   ├── auth
 │   │   ├── domain
-│   │   │   ├── interfaces
-│   │   │   │   └── user_auth_service_interface.go
-│   │   │   └── models
-│   │   │       ├── user_auth_profile_model.go
-│   │   │       ├── user_auth_request_model.go
-│   │   │       ├── user_auth_response_model.go
-│   │   │       └── user_auth_validation_model.go
+│   │   │   ├── data_models
+│   │   │   │   ├── user_auth_profile_model.go
+│   │   │   │   ├── user_auth_request_model.go
+│   │   │   │   ├── user_auth_response_model.go
+│   │   │   │   └── user_auth_validation_model.go
+│   │   │   └── interfaces
+│   │   │       └── user_auth_service_interface.go
 │   │   ├── handlers
 │   │   │   └── auth_handler.go
 │   │   ├── module.go
@@ -49,27 +47,31 @@ go-boilerplate-clean-arch
 │   │       └── auth_service.go
 │   └── user
 │       ├── domain
-│       │   ├── interfaces
-│       │   │   ├── user_activation_factory_interface.go
-│       │   │   ├── user_forgot_pass_factory_interface.go
-│       │   │   ├── user_repository_interface.go
-│       │   │   └── user_service_interface.go
-│       │   └── models
-│       │       ├── user_activation_request_model.go
-│       │       ├── user_activation_request_validation_model.go
-│       │       ├── user_create_reponse_model.go
-│       │       ├── user_create_request_model.go
-│       │       ├── user_create_request_validation_model.go
-│       │       ├── user_forgot_pass_act_request_model.go
-│       │       ├── user_forgot_pass_act_validation_model.go
-│       │       ├── user_forgot_pass_request_model.go
-│       │       ├── user_forgot_pass_validation_model.go
-│       │       ├── user_reactivation_request_model.go
-│       │       └── user_reactivation_validation_model.go
+│       │   ├── data_models
+│       │   │   ├── user_activation_request_model.go
+│       │   │   ├── user_activation_request_validation_model.go
+│       │   │   ├── user_create_reponse_model.go
+│       │   │   ├── user_create_request_model.go
+│       │   │   ├── user_create_request_validation_model.go
+│       │   │   ├── user_forgot_pass_act_request_model.go
+│       │   │   ├── user_forgot_pass_act_validation_model.go
+│       │   │   ├── user_forgot_pass_request_model.go
+│       │   │   ├── user_forgot_pass_validation_model.go
+│       │   │   ├── user_reactivation_request_model.go
+│       │   │   └── user_reactivation_validation_model.go
+│       │   └── interfaces
+│       │       ├── repository_aggregate_interface.go
+│       │       ├── user_activation_factory_interface.go
+│       │       ├── user_activation_repository_interface.go
+│       │       ├── user_forgot_pass_factory_interface.go
+│       │       ├── user_repository_interface.go
+│       │       └── user_service_interface.go
 │       ├── handlers
 │       │   └── user_handler.go
 │       ├── module.go
 │       ├── repositories
+│       │   ├── repository_aggregate.go
+│       │   ├── user_activation_repository.go
 │       │   └── user_repository.go
 │       ├── route.go
 │       └── services
@@ -85,6 +87,7 @@ go-boilerplate-clean-arch
 └── utils
     ├── api_group.go
     ├── api_wrapper.go
+    ├── create_token.go
     ├── hash.go
     ├── mail.go
     ├── rand_char.go
