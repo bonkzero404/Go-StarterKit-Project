@@ -1,11 +1,11 @@
 package user
 
 import (
-	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
-	"go-boilerplate-clean-arch/modules/user/handlers"
-	"go-boilerplate-clean-arch/modules/user/repositories"
-	"go-boilerplate-clean-arch/modules/user/services"
-	"go-boilerplate-clean-arch/modules/user/services/factories"
+	"go-starterkit-project/modules/user/domain/interfaces"
+	"go-starterkit-project/modules/user/handlers"
+	"go-starterkit-project/modules/user/repositories"
+	"go-starterkit-project/modules/user/services"
+	"go-starterkit-project/modules/user/services/factories"
 
 	"github.com/gofiber/fiber/v2"
 )

@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	respModel "go-boilerplate-clean-arch/domain/data_models"
-	"go-boilerplate-clean-arch/modules/auth/domain/data_models"
-	"go-boilerplate-clean-arch/modules/auth/domain/interfaces"
-	"go-boilerplate-clean-arch/utils"
+	respModel "go-starterkit-project/domain/data_models"
+	"go-starterkit-project/modules/auth/domain/data_models"
+	"go-starterkit-project/modules/auth/domain/interfaces"
+	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"

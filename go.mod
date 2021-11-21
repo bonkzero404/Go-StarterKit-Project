@@ -1,4 +1,4 @@
-module go-boilerplate-clean-arch
+module go-starterkit-project
 
 go 1.17
 

@@ -1,9 +1,9 @@
 package auth
 
 import (
-	"go-boilerplate-clean-arch/app/middleware"
-	"go-boilerplate-clean-arch/modules/auth/handlers"
-	"go-boilerplate-clean-arch/utils"
+	"go-starterkit-project/app/middleware"
+	"go-starterkit-project/modules/auth/handlers"
+	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

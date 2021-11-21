@@ -3,7 +3,7 @@
 File structure in this project.
 
 ```
-go-boilerplate-clean-arch
+go-starterkit-project
 ├── Makefile
 ├── README.md
 ├── app

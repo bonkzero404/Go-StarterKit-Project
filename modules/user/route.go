@@ -1,9 +1,9 @@
 package user
 
 import (
-	"go-boilerplate-clean-arch/app/middleware"
-	"go-boilerplate-clean-arch/modules/user/handlers"
-	"go-boilerplate-clean-arch/utils"
+	"go-starterkit-project/app/middleware"
+	"go-starterkit-project/modules/user/handlers"
+	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

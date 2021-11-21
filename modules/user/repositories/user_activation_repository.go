@@ -1,9 +1,9 @@
 package repositories
 
 import (
-	"go-boilerplate-clean-arch/database/driver"
-	"go-boilerplate-clean-arch/domain/stores"
-	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
+	"go-starterkit-project/database/driver"
+	"go-starterkit-project/domain/stores"
+	"go-starterkit-project/modules/user/domain/interfaces"
 
 	"gorm.io/gorm"
 )

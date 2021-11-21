@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"go-boilerplate-clean-arch/config"
+	"go-starterkit-project/config"
 )
 
 /**

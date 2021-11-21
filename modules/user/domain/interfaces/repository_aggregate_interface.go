@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"go-boilerplate-clean-arch/domain/stores"
+	"go-starterkit-project/domain/stores"
 )
 
 type RepositoryAggregateInterface interface {

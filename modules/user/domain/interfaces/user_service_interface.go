@@ -1,8 +1,8 @@
 package interfaces
 
 import (
-	"go-boilerplate-clean-arch/domain/stores"
-	"go-boilerplate-clean-arch/modules/user/domain/data_models"
+	"go-starterkit-project/domain/stores"
+	"go-starterkit-project/modules/user/domain/data_models"
 )
 
 type UserServiceInterface interface {

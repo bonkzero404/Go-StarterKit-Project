@@ -1,8 +1,8 @@
 package database
 
 import (
-	"go-boilerplate-clean-arch/database/driver"
-	"go-boilerplate-clean-arch/domain/stores"
+	"go-starterkit-project/database/driver"
+	"go-starterkit-project/domain/stores"
 )
 
 /**

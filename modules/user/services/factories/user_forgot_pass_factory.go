@@ -1,10 +1,10 @@
 package factories
 
 import (
-	respModel "go-boilerplate-clean-arch/domain/data_models"
-	"go-boilerplate-clean-arch/domain/stores"
-	"go-boilerplate-clean-arch/modules/user/domain/interfaces"
-	"go-boilerplate-clean-arch/utils"
+	respModel "go-starterkit-project/domain/data_models"
+	"go-starterkit-project/domain/stores"
+	"go-starterkit-project/modules/user/domain/interfaces"
+	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

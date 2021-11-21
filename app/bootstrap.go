@@ -1,8 +1,8 @@
 package app
 
 import (
-	"go-boilerplate-clean-arch/modules/auth"
-	"go-boilerplate-clean-arch/modules/user"
+	"go-starterkit-project/modules/auth"
+	"go-starterkit-project/modules/user"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"

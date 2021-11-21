@@ -2,8 +2,8 @@ package utils
 
 import (
 	"bytes"
-	"go-boilerplate-clean-arch/config"
-	"go-boilerplate-clean-arch/domain/data_models"
+	"go-starterkit-project/config"
+	"go-starterkit-project/domain/data_models"
 	"html/template"
 	"log"
 	"strconv"

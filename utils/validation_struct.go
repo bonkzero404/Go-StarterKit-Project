@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"go-boilerplate-clean-arch/domain/data_models"
+	"go-starterkit-project/domain/data_models"
 
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"

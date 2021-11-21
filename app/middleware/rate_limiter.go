@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"go-boilerplate-clean-arch/utils"
+	"go-starterkit-project/utils"
 	"time"
 
-	respModel "go-boilerplate-clean-arch/domain/data_models"
+	respModel "go-starterkit-project/domain/data_models"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"

@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"go-boilerplate-clean-arch/modules/auth/domain/data_models"
+	"go-starterkit-project/modules/auth/domain/data_models"
 
 	"github.com/golang-jwt/jwt/v4"
 )

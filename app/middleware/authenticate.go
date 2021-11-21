@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"go-boilerplate-clean-arch/config"
-	"go-boilerplate-clean-arch/utils"
+	"go-starterkit-project/config"
+	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v3"

@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"go-boilerplate-clean-arch/config"
-	"go-boilerplate-clean-arch/database"
-	"go-boilerplate-clean-arch/database/driver"
+	"go-starterkit-project/config"
+	"go-starterkit-project/database"
+	"go-starterkit-project/database/driver"
 
-	appRoute "go-boilerplate-clean-arch/app"
+	appRoute "go-starterkit-project/app"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"

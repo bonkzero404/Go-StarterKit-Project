@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"go-boilerplate-clean-arch/config"
+	"go-starterkit-project/config"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
