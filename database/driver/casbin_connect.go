@@ -1,6 +1,7 @@
 package driver
 
 import (
+	"go-starterkit-project/config"
 	"go-starterkit-project/domain/stores"
 
 	"github.com/casbin/casbin/v2"
@@ -11,6 +12,6 @@ var CASBIN *casbin.Enforcer
 
 func ConnectCasbin() *casbin.Enforcer {
 	adapter, _ := gormadapter.NewAdapterByDBWithCustomTable(DB, &stores.CasbinRule{})
-	CASBIN, _ := casbin.NewEnforcer("casbin_models/rbac_model.conf", adapter)
+	CASBIN, _ := casbin.NewEnforcer(config.Config("CASBIN_MODEL"), adapter)
 	return CASBIN
 }

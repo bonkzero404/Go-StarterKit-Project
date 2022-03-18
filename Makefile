@@ -1,8 +1,11 @@
+include .env
+export
+
 build:
 	go build -o dist/server main.go
 	cp -r templates dist/
 	cp -r storages dist/
-	cp -r casbin_models dist/
+	cp -r $$CASBIN_MODEL dist/
 	cp .env dist/
 
 run: build
