@@ -1,5 +1,9 @@
 build:
-	go build -o server main.go
+	go build -o dist/server main.go
+	cp -r templates dist/
+	cp -r storages dist/
+	cp -r casbin_models dist/
+	cp .env dist/
 
 run: build
 	./server
