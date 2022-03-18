@@ -24,7 +24,16 @@ func main() {
 	driver.ConnectCasbin()
 
 	// Casbin load policy
-	// driver.CASBIN_CONNECT.LoadPolicy()
+	// driver.CASBIN.LoadPolicy()
+
+	// driver.CASBIN.Enforce("alice", "data1", "read")
+
+	// // Modify the policy.
+	// // e.AddPolicy(...)
+	// // e.RemovePolicy(...)
+
+	// // Save the policy back to DB.
+	// driver.CASBIN.SavePolicy()
 
 	// Auto migration table
 	database.MigrateDB()
