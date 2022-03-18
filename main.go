@@ -20,6 +20,12 @@ func main() {
 	// Call database connection
 	driver.ConnectDB()
 
+	// connect casbin
+	driver.ConnectCasbin()
+
+	// Casbin load policy
+	// driver.CASBIN_CONNECT.LoadPolicy()
+
 	// Auto migration table
 	database.MigrateDB()
 

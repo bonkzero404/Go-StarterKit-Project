@@ -20,7 +20,18 @@ require (
 )
 
 require (
+	github.com/denisenkom/go-mssqldb v0.12.0 // indirect
+	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
+	github.com/golang-sql/sqlexp v0.0.0-20170517235910-f1bb20e5a188 // indirect
+	gorm.io/driver/sqlserver v1.3.1 // indirect
+	gorm.io/plugin/dbresolver v1.1.0 // indirect
+)
+
+require (
+	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
+	github.com/casbin/casbin/v2 v2.42.0 // indirect
+	github.com/casbin/gorm-adapter/v3 v3.5.0
 	github.com/cespare/reflex v0.3.1 // indirect
 	github.com/creack/pty v1.1.11 // indirect
 	github.com/fsnotify/fsnotify v1.4.7 // indirect
