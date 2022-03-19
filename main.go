@@ -20,6 +20,12 @@ func main() {
 	// Call database connection
 	driver.ConnectDB()
 
+	// Casbin adapter
+	driver.CasbinAdapterConnect()
+
+	// connect casbin
+	driver.Casbin()
+
 	// Auto migration table
 	database.MigrateDB()
 
@@ -33,7 +39,7 @@ func main() {
 	appRoute.Bootstrap(app)
 
 	// Set port
-	appPort := fmt.Sprintf(":%s", config.Config("APP_PORT"))
+	appPort := fmt.Sprintf("%s:%s", config.Config("APP_HOST"), config.Config("APP_PORT"))
 
 	// Listen app
 	app.Listen(appPort)
