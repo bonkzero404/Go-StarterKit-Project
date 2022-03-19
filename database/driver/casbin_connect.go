@@ -8,10 +8,26 @@ import (
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 )
 
-var CASBIN *casbin.Enforcer
+func CasbinAdapterConnect() (*gormadapter.Adapter, error) {
+	CasbinAdapter, CasbinAdapterError := gormadapter.NewAdapterByDBWithCustomTable(DB, &stores.CasbinRule{})
 
-func ConnectCasbin() *casbin.Enforcer {
-	adapter, _ := gormadapter.NewAdapterByDBWithCustomTable(DB, &stores.CasbinRule{})
-	CASBIN, _ := casbin.NewEnforcer(config.Config("CASBIN_MODEL"), adapter)
-	return CASBIN
+	if CasbinAdapterError != nil {
+		return nil, CasbinAdapterError
+	}
+
+	return CasbinAdapter, CasbinAdapterError
+}
+
+func Casbin() (*casbin.Enforcer, error) {
+	// CasbinRbac = &casbin.Enforcer{}
+	adapter, _ := CasbinAdapterConnect()
+	CasbinRbac, err := casbin.NewEnforcer(config.Config("CASBIN_MODEL"), adapter)
+
+	if err != nil {
+		return nil, err
+	}
+
+	//CasbinRbac.LoadPolicy()
+
+	return CasbinRbac, err
 }
