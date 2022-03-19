@@ -8,10 +8,15 @@ import (
 
 	appRoute "go-starterkit-project/app"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/helmet/v2"
 )
+
+func addRoleMasterAdministrator(myCasbin *casbin.Enforcer) {
+	myCasbin.AddPolicy("admin", "*", "create", "read", "update", "delete")
+}
 
 func main() {
 	// Fiber app
@@ -20,11 +25,10 @@ func main() {
 	// Call database connection
 	driver.ConnectDB()
 
-	// Casbin adapter
-	driver.CasbinAdapterConnect()
-
 	// connect casbin
-	driver.Casbin()
+	myCasbin, _ := driver.Casbin()
+
+	addRoleMasterAdministrator(myCasbin)
 
 	// Auto migration table
 	database.MigrateDB()
