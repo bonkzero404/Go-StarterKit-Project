@@ -11,5 +11,8 @@ build:
 run: build
 	./server
 
+dev:
+	go run main.go
+
 watch:
-	reflex -s -r '\.go$$' make run
+	reflex -s -r '\.go$$' make dev
