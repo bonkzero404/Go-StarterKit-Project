@@ -8,7 +8,6 @@ import (
 	"go-starterkit-project/modules/user/domain/interfaces"
 	"go-starterkit-project/modules/user/services/factories"
 	"go-starterkit-project/utils"
-	"log"
 	"strings"
 	"time"
 
@@ -17,10 +16,10 @@ import (
 )
 
 type UserService struct {
-	UserRepository interfaces.UserRepositoryInterface
+	UserRepository           interfaces.UserRepositoryInterface
 	UserActivationRepository interfaces.UserActivationRepositoryInterface
-	RepositoryAggregate interfaces.RepositoryAggregateInterface
-	ActionFactory  factories.ActionFactoryInterface
+	RepositoryAggregate      interfaces.RepositoryAggregateInterface
+	ActionFactory            factories.ActionFactoryInterface
 }
 
 func NewUserService(
@@ -30,10 +29,10 @@ func NewUserService(
 	factory factories.ActionFactoryInterface,
 ) interfaces.UserServiceInterface {
 	return &UserService{
-		UserRepository: userRepository,
+		UserRepository:           userRepository,
 		UserActivationRepository: userActivationRepository,
-		RepositoryAggregate: repositoryAggregate,
-		ActionFactory:  factory,
+		RepositoryAggregate:      repositoryAggregate,
+		ActionFactory:            factory,
 	}
 }
 
@@ -55,7 +54,6 @@ func (service UserService) CreateUser(user *data_models.UserCreateRequest) (*dat
 	}
 
 	result, err := service.RepositoryAggregate.CreateUser(&userData, &userAvtivate)
-
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate") {
@@ -99,8 +97,6 @@ func (service UserService) UserActivation(email string, code string) (*data_mode
 	var userAct stores.UserActivation
 
 	errUser := service.UserRepository.FindUserByEmail(&user, email).Error
-
-	log.Println(user)
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return &data_models.UserCreateResponse{}, &respModel.ApiErrorResponse{
@@ -160,7 +156,6 @@ func (service UserService) CreateUserActivation(email string, actType stores.Act
 	var user stores.User
 
 	errUser := service.UserRepository.FindUserByEmail(&user, email).Error
-
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &respModel.ApiErrorResponse{
