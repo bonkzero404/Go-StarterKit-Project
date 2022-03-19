@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"go-starterkit-project/database/driver"
 	respModel "go-starterkit-project/domain/data_models"
 	"go-starterkit-project/domain/stores"
 	"go-starterkit-project/modules/user/domain/data_models"
@@ -140,6 +141,9 @@ func (service UserService) UserActivation(email string, code string) (*data_mode
 	}
 
 	service.RepositoryAggregate.UpdateActivationCodeUsed(user.ID.String(), code)
+
+	myCasbin, _ := driver.Casbin()
+	myCasbin.AddRoleForUser(user.ID.String(), "user")
 
 	response := data_models.UserCreateResponse{
 		ID:       userNew.ID.String(),
