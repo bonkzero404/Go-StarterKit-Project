@@ -20,9 +20,9 @@ go-starterkit-project
 │   │   └── postgresql.go
 │   └── migration.go
 ├── domain
-│   ├── data_models
-│   │   ├── mail_model.go
-│   │   └── response_model.go
+│   ├── dto
+│   │   ├── mail_dto.go
+│   │   └── response_dto.go
 │   └── stores
 │       ├── user_activation.go
 │       └── user_store.go
@@ -32,11 +32,11 @@ go-starterkit-project
 ├── modules
 │   ├── auth
 │   │   ├── domain
-│   │   │   ├── data_models
-│   │   │   │   ├── user_auth_profile_model.go
-│   │   │   │   ├── user_auth_request_model.go
-│   │   │   │   ├── user_auth_response_model.go
-│   │   │   │   └── user_auth_validation_model.go
+│   │   │   ├── dto
+│   │   │   │   ├── user_auth_profile_dto.go
+│   │   │   │   ├── user_auth_request_dto.go
+│   │   │   │   ├── user_auth_response_dto.go
+│   │   │   │   └── user_auth_validation_dto.go
 │   │   │   └── interfaces
 │   │   │       └── user_auth_service_interface.go
 │   │   ├── handlers
@@ -47,18 +47,18 @@ go-starterkit-project
 │   │       └── auth_service.go
 │   └── user
 │       ├── domain
-│       │   ├── data_models
-│       │   │   ├── user_activation_request_model.go
-│       │   │   ├── user_activation_request_validation_model.go
-│       │   │   ├── user_create_reponse_model.go
-│       │   │   ├── user_create_request_model.go
-│       │   │   ├── user_create_request_validation_model.go
-│       │   │   ├── user_forgot_pass_act_request_model.go
-│       │   │   ├── user_forgot_pass_act_validation_model.go
-│       │   │   ├── user_forgot_pass_request_model.go
-│       │   │   ├── user_forgot_pass_validation_model.go
-│       │   │   ├── user_reactivation_request_model.go
-│       │   │   └── user_reactivation_validation_model.go
+│       │   ├── dto
+│       │   │   ├── user_activation_request_dto.go
+│       │   │   ├── user_activation_request_validation_dto.go
+│       │   │   ├── user_create_reponse_dto.go
+│       │   │   ├── user_create_request_dto.go
+│       │   │   ├── user_create_request_validation_dto.go
+│       │   │   ├── user_forgot_pass_act_request_dto.go
+│       │   │   ├── user_forgot_pass_act_validation_dto.go
+│       │   │   ├── user_forgot_pass_request_dto.go
+│       │   │   ├── user_forgot_pass_validation_dto.go
+│       │   │   ├── user_reactivation_request_dto.go
+│       │   │   └── user_reactivation_validation_dto.go
 │       │   └── interfaces
 │       │       ├── repository_aggregate_interface.go
 │       │       ├── user_activation_factory_interface.go
@@ -80,7 +80,7 @@ go-starterkit-project
 │           │   ├── user_activation_factory.go
 │           │   └── user_forgot_pass_factory.go
 │           └── user_service.go
-├── server
+├── rbac_model.conf
 ├── templates
 │   ├── user_activation.html
 │   └── user_forgot_password.html
