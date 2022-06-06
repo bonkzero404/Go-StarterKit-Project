@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	respModel "go-starterkit-project/domain/data_models"
-	"go-starterkit-project/modules/auth/domain/data_models"
+	respModel "go-starterkit-project/domain/dto"
+	"go-starterkit-project/modules/auth/domain/dto"
 	"go-starterkit-project/modules/auth/domain/interfaces"
 	"go-starterkit-project/utils"
 
@@ -24,13 +24,13 @@ func NewAuthHandler(authService interfaces.UserAuthServiceInterface) *AuthHandle
 Authentication handler
 */
 func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
-	var request data_models.UserAuthRequest
+	var request dto.UserAuthRequest
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
 	}
 
-	userValidation := data_models.UserAuthValidation{
+	userValidation := dto.UserAuthValidation{
 		EmailValid:    request.Email,
 		PasswordValid: request.Password,
 	}

@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"go-starterkit-project/domain/data_models"
+	"go-starterkit-project/domain/dto"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -10,13 +10,13 @@ import (
 This function is used to wrap a json response globally
 */
 func ApiWrapper(ctx *fiber.Ctx, message string, code int, status string, data interface{}) error {
-	meta := data_models.Meta{
+	meta := dto.Meta{
 		Message: message,
 		Code:    code,
 		Status:  status,
 	}
 
-	responseJson := data_models.Response{
+	responseJson := dto.Response{
 		Meta: meta,
 		Data: data,
 	}

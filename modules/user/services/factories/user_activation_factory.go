@@ -1,7 +1,7 @@
 package factories
 
 import (
-	respModel "go-starterkit-project/domain/data_models"
+	respModel "go-starterkit-project/domain/dto"
 	"go-starterkit-project/domain/stores"
 	"go-starterkit-project/modules/user/domain/interfaces"
 	"go-starterkit-project/utils"

@@ -1,4 +1,4 @@
-package data_models
+package dto
 
 type UserActivationRequest struct {
 	Email string `json:"email"`

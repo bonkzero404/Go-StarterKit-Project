@@ -1,4 +1,4 @@
-package data_models
+package dto
 
 type UserCreateRequest struct {
 	FullName string `json:"full_name"`

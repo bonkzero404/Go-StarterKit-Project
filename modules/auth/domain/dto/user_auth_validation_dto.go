@@ -1,4 +1,4 @@
-package data_models
+package dto
 
 type UserAuthValidation struct {
 	EmailValid    string `validate:"required"`

@@ -1,4 +1,4 @@
-package data_models
+package dto
 
 type UserForgotPassActValidation struct {
 	Email          string `validate:"required,email"`

@@ -1,4 +1,4 @@
-package data_models
+package dto
 
 type UserCreateRequestValidation struct {
 	FullName string `validate:"required,min=3"`

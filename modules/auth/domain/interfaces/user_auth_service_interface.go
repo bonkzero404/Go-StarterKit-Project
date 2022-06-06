@@ -1,15 +1,15 @@
 package interfaces
 
 import (
-	"go-starterkit-project/modules/auth/domain/data_models"
+	"go-starterkit-project/modules/auth/domain/dto"
 
 	"github.com/golang-jwt/jwt/v4"
 )
 
 type UserAuthServiceInterface interface {
-	Authenticate(auth *data_models.UserAuthRequest) (*data_models.UserAuthResponse, error)
+	Authenticate(auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error)
 
-	GetProfile(id string) (*data_models.UserAuthProfileResponse, error)
+	GetProfile(id string) (*dto.UserAuthProfileResponse, error)
 
-	RefreshToken(token *jwt.Token) (*data_models.UserAuthResponse, error)
+	RefreshToken(token *jwt.Token) (*dto.UserAuthResponse, error)
 }

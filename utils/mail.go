@@ -3,7 +3,7 @@ package utils
 import (
 	"bytes"
 	"go-starterkit-project/config"
-	"go-starterkit-project/domain/data_models"
+	"go-starterkit-project/domain/dto"
 	"html/template"
 	"log"
 	"strconv"
@@ -11,7 +11,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-func SendMail(data *data_models.Mail) {
+func SendMail(data *dto.Mail) {
 	var mailFrom string = data.From
 
 	t := template.New(data.TemplateHtml)

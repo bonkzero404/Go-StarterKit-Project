@@ -1,4 +1,4 @@
-package data_models
+package dto
 
 type UserAuthProfileResponse struct {
 	ID       string `json:"id"`

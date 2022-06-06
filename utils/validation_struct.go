@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"go-starterkit-project/domain/data_models"
+	"go-starterkit-project/domain/dto"
 
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
@@ -9,8 +9,8 @@ import (
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 )
 
-func ValidateStruct(s interface{}) []*data_models.ErrorResponse {
-	var errors []*data_models.ErrorResponse
+func ValidateStruct(s interface{}) []*dto.ErrorResponse {
+	var errors []*dto.ErrorResponse
 
 	en := en.New()
 	uni := ut.New(en, en)
@@ -22,7 +22,7 @@ func ValidateStruct(s interface{}) []*data_models.ErrorResponse {
 
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
-			var element data_models.ErrorResponse
+			var element dto.ErrorResponse
 
 			element.FailedField = err.Field()
 			element.Tag = err.Tag()
