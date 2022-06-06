@@ -101,6 +101,7 @@ To run this project copy the .env.example file into .env, then do the configurat
 ```conf
 # Application port
 APP_PORT=3000
+APP_HOST=localhost
 
 # Endpoint
 API_WRAP=api
@@ -109,10 +110,10 @@ API_VERSION=v1
 # Database Connection
 # mysql | pgsql
 DB_DRIVER=mysql
-DB_HOST=localhost
-DB_NAME=your_database_name
-DB_USER=root
-DB_PASSWORD=yout_db_password
+DB_HOST=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
 DB_PORT=3306
 
 # Database Pool
@@ -120,14 +121,17 @@ DB_MAX_IDLE_CONNS=10
 DB_MAX_OPEN_CONNS=100
 
 #JWT
-JWT_SECRET=rahasiabanget
+JWT_SECRET=supersecret
 
 # Mail
 MAIL_HOST=smtp.mailtrap.io
 MAIL_PORT=2525
-MAIL_USERNAME=your_mailtrap_username
-MAIL_PASSWORD=your_mailtrap_password
-MAIL_FROM=Administrator <admin@example.com>
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_FROM=admin@example.com
+
+# Storages
+STORAGE_DIR=storages
 
 ```
 
