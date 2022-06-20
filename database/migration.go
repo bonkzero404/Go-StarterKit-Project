@@ -13,5 +13,9 @@ func MigrateDB() {
 	driver.DB.AutoMigrate(
 		&stores.User{},
 		&stores.UserActivation{},
+		&stores.Acl{},
+		&stores.AclRole{},
+		&stores.Role{},
+		&stores.RoleUser{},
 	)
 }
