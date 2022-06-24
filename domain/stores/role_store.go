@@ -21,7 +21,7 @@ This function is a feature that gorm has for making hooks,
 this hook function is used to generate uuid when the user
 performs the create action
 */
-func (*Role) BeforeCreate(tx *gorm.DB) error {
-	tx.Statement.SetColumn("ID", uuid.New())
-	return nil
-}
+// func (*Role) BeforeCreate(tx *gorm.DB) error {
+// 	tx.Statement.SetColumn("ID", uuid.New())
+// 	return nil
+// }

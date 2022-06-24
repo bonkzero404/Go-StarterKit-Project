@@ -1,6 +1,7 @@
 package driver
 
 import (
+	"database/sql"
 	"fmt"
 	"go-starterkit-project/config"
 	"strconv"
@@ -15,6 +16,7 @@ import (
 this variable is a global variable to reuse database connection
 */
 var DB *gorm.DB
+var DBMock *sql.DB
 
 /**
 This function as a factory to connect to MySQL or PostgreSQL
