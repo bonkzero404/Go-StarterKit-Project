@@ -1,6 +1,7 @@
 package user
 
 import (
+	"go-starterkit-project/database/driver"
 	"go-starterkit-project/modules/user/domain/interfaces"
 	"go-starterkit-project/modules/user/handlers"
 	"go-starterkit-project/modules/user/repositories"
@@ -25,8 +26,8 @@ This function is for registering repository - service - handler
 */
 func RegisterModule(app *fiber.App) {
 
-	userRepository := repositories.NewUserRepository()
-	userActivationRepository := repositories.NewUserActivationRepository()
+	userRepository := repositories.NewUserRepository(driver.DB)
+	userActivationRepository := repositories.NewUserActivationRepository(driver.DB)
 	aggregateRepository := repositories.NewRepositoryAggregate(userRepository, userActivationRepository)
 
 	userActivationFactory := registerActivationFactory(userActivationRepository)

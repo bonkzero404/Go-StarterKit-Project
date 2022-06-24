@@ -12,7 +12,7 @@ type UserRepository struct {
 	DB *gorm.DB
 }
 
-func NewUserRepository() interfaces.UserRepositoryInterface {
+func NewUserRepository(db *gorm.DB) interfaces.UserRepositoryInterface {
 	return &UserRepository{
 		DB: driver.DB,
 	}
