@@ -34,12 +34,7 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 		})
 	}
 
-	userValidation := dto.UserAuthValidation{
-		EmailValid:    request.Email,
-		PasswordValid: request.Password,
-	}
-
-	errors := utils.ValidateStruct(userValidation)
+	errors := utils.ValidateStruct(request)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed authentication",
