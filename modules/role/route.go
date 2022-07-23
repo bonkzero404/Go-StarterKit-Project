@@ -1,29 +1,24 @@
-package user
+package role
 
 import (
 	"go-starterkit-project/app/middleware"
-	"go-starterkit-project/modules/user/handlers"
+	"go-starterkit-project/modules/role/handlers"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type ApiRoute struct {
-	UserHandler handlers.UserHandler
+	RoleHandler handlers.RoleHandler
 }
 
 func (handler *ApiRoute) Route(app fiber.Router) {
-	const endpointGroup string = "/user"
+	const endpointGroup string = "/role"
 
-	user := app.Group(utils.SetupApiGroup() + endpointGroup)
+	role := app.Group(utils.SetupApiGroup() + endpointGroup)
 
-	user.Post("/register", middleware.RateLimiter(5, 30), handler.UserHandler.RegisterUser)
+	role.Post("/", middleware.RateLimiter(5, 30), handler.RoleHandler.CreateRole)
 
-	user.Post("/activation", middleware.RateLimiter(5, 30), handler.UserHandler.UserActivation)
+	role.Get("/", middleware.RateLimiter(5, 30), handler.RoleHandler.GetRoleList)
 
-	user.Post("/activation/re-send", middleware.RateLimiter(5, 30), handler.UserHandler.ReCreateUserActivation)
-
-	user.Post("/request-forgot-password", middleware.RateLimiter(5, 30), handler.UserHandler.CreateActivationForgotPassword)
-
-	user.Post("/forgot-password", middleware.RateLimiter(5, 30), handler.UserHandler.UpdatePassword)
 }

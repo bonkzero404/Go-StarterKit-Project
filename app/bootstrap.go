@@ -2,6 +2,7 @@ package app
 
 import (
 	"go-starterkit-project/modules/auth"
+	"go-starterkit-project/modules/role"
 	"go-starterkit-project/modules/user"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,4 +23,7 @@ func Bootstrap(app *fiber.App) {
 
 	// Register module auth
 	auth.RegisterModule(app)
+
+	// Register module role
+	role.RegisterModule(app)
 }
