@@ -24,7 +24,7 @@ func (handler *RoleHandler) CreateRole(c *fiber.Ctx) error {
 	var request dto.RoleRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
+		return utils.ApiUnprocessableEntity(c, err)
 	}
 
 	roleValidation := validation.RoleRequestValidation{
@@ -33,17 +33,17 @@ func (handler *RoleHandler) CreateRole(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(roleValidation)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, "Error validation request", errors)
+		return utils.ApiErrorValidation(c, errors)
 	}
 
 	response, err := handler.RoleService.CreateRole(&request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, "Error registration", re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, err)
 	}
 
-	return utils.ApiCreated(c, "Register user successful", response)
+	return utils.ApiCreated(c, response)
 }
 
 func (handler *RoleHandler) GetRoleList(c *fiber.Ctx) error {
@@ -51,8 +51,8 @@ func (handler *RoleHandler) GetRoleList(c *fiber.Ctx) error {
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, "Error get roles", re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, err)
 	}
 
-	return utils.ApiOk(c, "Get role successful", response)
+	return utils.ApiOk(c, response)
 }

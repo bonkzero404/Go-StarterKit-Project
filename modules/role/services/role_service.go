@@ -67,7 +67,7 @@ func (service RoleService) GetRoleList(c *fiber.Ctx) (*utils.Pagination, error) 
 	if err != nil {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Something went wrong with our server",
+			Message:    err.Error(),
 		}
 	}
 

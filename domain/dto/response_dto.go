@@ -3,14 +3,18 @@ package dto
 import "fmt"
 
 type Response struct {
-	Meta Meta        `json:"meta"`
-	Data interface{} `json:"data"`
+	Valid bool        `json:"valid"`
+	Meta  Meta        `json:"meta"`
+	Error interface{} `json:"errors"`
+	Data  interface{} `json:"data"`
 }
 
 type Meta struct {
-	Message string `json:"message"`
-	Code    int    `json:"code"`
-	Status  string `json:"status"`
+	Route  string `json:"route"`
+	Method string `json:"method"`
+	Query  string `json:"query"`
+	Code   int    `json:"code"`
+	Status string `json:"status"`
 }
 
 type ErrorResponse struct {

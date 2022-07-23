@@ -17,8 +17,8 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 
 	role := app.Group(utils.SetupApiGroup() + endpointGroup)
 
-	role.Post("/", middleware.RateLimiter(5, 30), handler.RoleHandler.CreateRole)
+	role.Post("/", middleware.Authenticate(), middleware.RateLimiter(5, 30), handler.RoleHandler.CreateRole)
 
-	role.Get("/", middleware.RateLimiter(5, 30), handler.RoleHandler.GetRoleList)
+	role.Get("/", middleware.Authenticate(), middleware.RateLimiter(5, 30), handler.RoleHandler.GetRoleList)
 
 }

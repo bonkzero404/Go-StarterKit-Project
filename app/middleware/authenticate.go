@@ -14,7 +14,7 @@ This function is used as middleware for authentication
 func Authenticate() func(ctx *fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
-			return utils.ApiUnauthorized(ctx, "Unauthorized user", err)
+			return utils.ApiUnauthorized(ctx, nil)
 		},
 		SigningKey: []byte(config.Config("JWT_SECRET")),
 	})

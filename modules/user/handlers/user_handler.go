@@ -24,7 +24,7 @@ func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
 	var request dto.UserCreateRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
+		return utils.ApiUnprocessableEntity(c, err)
 	}
 
 	userValidation := dto.UserCreateRequestValidation{
@@ -36,24 +36,24 @@ func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(userValidation)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, "Error validation request", errors)
+		return utils.ApiErrorValidation(c, errors)
 	}
 
 	response, err := handler.UserService.CreateUser(&request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, "Error registration", re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, err)
 	}
 
-	return utils.ApiCreated(c, "Register user successful", response)
+	return utils.ApiCreated(c, response)
 }
 
 func (handler *UserHandler) UserActivation(c *fiber.Ctx) error {
 	var request dto.UserActivationRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
+		return utils.ApiUnprocessableEntity(c, err)
 	}
 
 	userValidation := dto.UserActivationRequestValidation{
@@ -63,24 +63,24 @@ func (handler *UserHandler) UserActivation(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(userValidation)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, "Error validation request", errors)
+		return utils.ApiErrorValidation(c, errors)
 	}
 
 	response, err := handler.UserService.UserActivation(request.Email, request.Code)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, "Error activation user", re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, err)
 	}
 
-	return utils.ApiCreated(c, "Activation user successful", response)
+	return utils.ApiCreated(c, response)
 }
 
 func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 	var request dto.UserReActivationRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
+		return utils.ApiUnprocessableEntity(c, err)
 	}
 
 	userValidation := dto.UserReActivationValidation{
@@ -89,24 +89,24 @@ func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(userValidation)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, "Error validation request", errors)
+		return utils.ApiErrorValidation(c, errors)
 	}
 
 	response, err := handler.UserService.CreateUserActivation(request.Email, stores.ACTIVATION_CODE)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, "Error re-create user activation", re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, err)
 	}
 
-	return utils.ApiCreated(c, "Code activation was sent to your email", response)
+	return utils.ApiCreated(c, response)
 }
 
 func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 	var request dto.UserForgotPassRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
+		return utils.ApiUnprocessableEntity(c, err)
 	}
 
 	userValidation := dto.UserForgotPassValidation{
@@ -115,24 +115,24 @@ func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(userValidation)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, "Error validation request", errors)
+		return utils.ApiErrorValidation(c, errors)
 	}
 
 	response, err := handler.UserService.CreateUserActivation(request.Email, stores.FORGOT_PASSWORD)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, "Error create activation forgot password", re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, err)
 	}
 
-	return utils.ApiCreated(c, "Forgot password code was sent to your email", response)
+	return utils.ApiCreated(c, response)
 }
 
 func (handler *UserHandler) UpdatePassword(c *fiber.Ctx) error {
 	var request dto.UserForgotPassActRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
+		return utils.ApiUnprocessableEntity(c, err)
 	}
 
 	userValidation := dto.UserForgotPassActValidation{
@@ -144,15 +144,15 @@ func (handler *UserHandler) UpdatePassword(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(userValidation)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, "Error validation request", errors)
+		return utils.ApiErrorValidation(c, errors)
 	}
 
 	response, err := handler.UserService.UpdatePassword(&request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, "Failed to create new password", re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, err)
 	}
 
-	return utils.ApiCreated(c, "Successfuly to create new password", response)
+	return utils.ApiCreated(c, response)
 }

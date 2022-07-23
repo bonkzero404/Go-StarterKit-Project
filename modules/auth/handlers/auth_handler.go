@@ -27,7 +27,7 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 	var request dto.UserAuthRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, "Failed body parser", err)
+		return utils.ApiUnprocessableEntity(c, err)
 	}
 
 	userValidation := dto.UserAuthValidation{
@@ -37,17 +37,17 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(userValidation)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, "Error validation request", errors)
+		return utils.ApiErrorValidation(c, errors)
 	}
 
 	response, err := handler.AuthService.Authenticate(&request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, "Invalid authentication", re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, err)
 	}
 
-	return utils.ApiOk(c, "Authentication successful", response)
+	return utils.ApiOk(c, response)
 }
 
 /**
@@ -62,10 +62,10 @@ func (handler *AuthHandler) GetProfile(c *fiber.Ctx) error {
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, "Failed to get user data", re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, err)
 	}
 
-	return utils.ApiOk(c, "Load user successful", response)
+	return utils.ApiOk(c, response)
 }
 
 /**
@@ -78,8 +78,8 @@ func (handler *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, "Failed to refresh token", re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, err)
 	}
 
-	return utils.ApiOk(c, "Refresh token successful", response)
+	return utils.ApiOk(c, response)
 }
