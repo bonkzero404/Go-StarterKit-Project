@@ -31,14 +31,7 @@ func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
 		})
 	}
 
-	userValidation := dto.UserCreateRequestValidation{
-		FullName: request.FullName,
-		Email:    request.Email,
-		Phone:    request.Phone,
-		Password: request.Password,
-	}
-
-	errors := utils.ValidateStruct(userValidation)
+	errors := utils.ValidateStruct(request)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to register user",
@@ -72,12 +65,7 @@ func (handler *UserHandler) UserActivation(c *fiber.Ctx) error {
 		})
 	}
 
-	userValidation := dto.UserActivationRequestValidation{
-		Email: request.Email,
-		Code:  request.Code,
-	}
-
-	errors := utils.ValidateStruct(userValidation)
+	errors := utils.ValidateStruct(request)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to register user",
@@ -111,11 +99,7 @@ func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 		})
 	}
 
-	userValidation := dto.UserReActivationValidation{
-		Email: request.Email,
-	}
-
-	errors := utils.ValidateStruct(userValidation)
+	errors := utils.ValidateStruct(request)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to activate user",
@@ -149,11 +133,7 @@ func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 		})
 	}
 
-	userValidation := dto.UserForgotPassValidation{
-		Email: request.Email,
-	}
-
-	errors := utils.ValidateStruct(userValidation)
+	errors := utils.ValidateStruct(request)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to re create activate forgot password",
@@ -187,14 +167,7 @@ func (handler *UserHandler) UpdatePassword(c *fiber.Ctx) error {
 		})
 	}
 
-	userValidation := dto.UserForgotPassActValidation{
-		Email:          request.Email,
-		Password:       request.Password,
-		RepeatPassword: request.RepeatPassword,
-		Code:           request.Code,
-	}
-
-	errors := utils.ValidateStruct(userValidation)
+	errors := utils.ValidateStruct(request)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to re create activate forgot password",
