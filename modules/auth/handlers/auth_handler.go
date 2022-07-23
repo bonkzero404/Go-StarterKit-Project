@@ -27,7 +27,11 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 	var request dto.UserAuthRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, err)
+		return utils.ApiUnprocessableEntity(c, respModel.Errors{
+			Message: "Failed authentication",
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
 	}
 
 	userValidation := dto.UserAuthValidation{
@@ -37,14 +41,22 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(userValidation)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, errors)
+		return utils.ApiErrorValidation(c, respModel.Errors{
+			Message: "Failed authentication",
+			Cause:   "Some fields must be validated",
+			Inputs:  nil,
+		})
 	}
 
 	response, err := handler.AuthService.Authenticate(&request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+			Message: "Failed authentication",
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
 	}
 
 	return utils.ApiOk(c, response)
@@ -62,7 +74,11 @@ func (handler *AuthHandler) GetProfile(c *fiber.Ctx) error {
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+			Message: "Failed to get your profile",
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
 	}
 
 	return utils.ApiOk(c, response)
@@ -78,7 +94,11 @@ func (handler *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, err)
+		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+			Message: "Failed to refresh token",
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
 	}
 
 	return utils.ApiOk(c, response)

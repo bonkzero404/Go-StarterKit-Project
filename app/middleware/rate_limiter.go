@@ -16,9 +16,10 @@ This function is used as middleware for rate limit request
 func RateLimiter(max int, duration time.Duration) func(ctx *fiber.Ctx) error {
 	return limiter.New(limiter.Config{
 		LimitReached: func(ctx *fiber.Ctx) error {
-			return utils.ApiResponseError(ctx, fiber.StatusRequestEntityTooLarge, &respModel.ApiErrorResponse{
-				StatusCode: fiber.StatusTooManyRequests,
-				Message:    "Request too many request",
+			return utils.ApiResponseError(ctx, fiber.StatusRequestEntityTooLarge, respModel.Errors{
+				Message: "Failed request API",
+				Cause:   "Too many request",
+				Inputs:  nil,
 			})
 		},
 		Max:        max,

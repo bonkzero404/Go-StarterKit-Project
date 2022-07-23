@@ -17,6 +17,12 @@ type Meta struct {
 	Status string `json:"status"`
 }
 
+type Errors struct {
+	Message string      `json:"message"`
+	Cause   string      `json:"cause"`
+	Inputs  interface{} `json:"inputs"`
+}
+
 type ErrorResponse struct {
 	FailedField string `json:"field"`
 	Tag         string `json:"tag"`

@@ -9,7 +9,7 @@ import (
 /**
 This function is used to wrap a json response globally
 */
-func ApiWrapper(ctx *fiber.Ctx, code int, status string, data interface{}) error {
+func ApiWrapper(ctx *fiber.Ctx, code int, status string, data interface{}, errors interface{}) error {
 	meta := dto.Meta{
 		Route:  ctx.Route().Path,
 		Method: ctx.Method(),
@@ -24,7 +24,7 @@ func ApiWrapper(ctx *fiber.Ctx, code int, status string, data interface{}) error
 		responseJson := dto.Response{
 			Valid: false,
 			Meta:  meta,
-			Error: data,
+			Error: errors,
 			Data:  nil,
 		}
 
@@ -41,26 +41,26 @@ func ApiWrapper(ctx *fiber.Ctx, code int, status string, data interface{}) error
 	return ctx.Status(code).JSON(responseJson)
 }
 
-func ApiErrorValidation(ctx *fiber.Ctx, data interface{}) error {
-	return ApiWrapper(ctx, fiber.StatusNotAcceptable, "error_validation", data)
+func ApiErrorValidation(ctx *fiber.Ctx, errors dto.Errors) error {
+	return ApiWrapper(ctx, fiber.StatusNotAcceptable, "error_validation", nil, errors)
 }
 
-func ApiUnprocessableEntity(ctx *fiber.Ctx, data interface{}) error {
-	return ApiWrapper(ctx, fiber.StatusUnprocessableEntity, "error_unprocessable_entity", data)
+func ApiUnprocessableEntity(ctx *fiber.Ctx, errors dto.Errors) error {
+	return ApiWrapper(ctx, fiber.StatusUnprocessableEntity, "error_unprocessable_entity", nil, errors)
 }
 
-func ApiUnauthorized(ctx *fiber.Ctx, data interface{}) error {
-	return ApiWrapper(ctx, fiber.StatusUnauthorized, "error_unauthorized", data)
+func ApiUnauthorized(ctx *fiber.Ctx, errors dto.Errors) error {
+	return ApiWrapper(ctx, fiber.StatusUnauthorized, "error_unauthorized", nil, errors)
 }
 
 func ApiCreated(ctx *fiber.Ctx, data interface{}) error {
-	return ApiWrapper(ctx, fiber.StatusCreated, "success_created", data)
+	return ApiWrapper(ctx, fiber.StatusCreated, "success_created", data, nil)
 }
 
 func ApiOk(ctx *fiber.Ctx, data interface{}) error {
-	return ApiWrapper(ctx, fiber.StatusOK, "success_ok", data)
+	return ApiWrapper(ctx, fiber.StatusOK, "success_ok", data, nil)
 }
 
-func ApiResponseError(ctx *fiber.Ctx, code int, data interface{}) error {
-	return ApiWrapper(ctx, code, "error_api", data)
+func ApiResponseError(ctx *fiber.Ctx, code int, errors dto.Errors) error {
+	return ApiWrapper(ctx, code, "error_api", nil, errors)
 }
