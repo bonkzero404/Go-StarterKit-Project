@@ -4,7 +4,6 @@ import (
 	respModel "go-starterkit-project/domain/dto"
 	"go-starterkit-project/modules/role/domain/dto"
 	"go-starterkit-project/modules/role/domain/interfaces"
-	"go-starterkit-project/modules/role/domain/validation"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -31,11 +30,7 @@ func (handler *RoleHandler) CreateRole(c *fiber.Ctx) error {
 		})
 	}
 
-	roleValidation := validation.RoleRequestValidation{
-		RoleName: request.RoleName,
-	}
-
-	errors := utils.ValidateStruct(roleValidation)
+	errors := utils.ValidateStruct(request)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to create role",
