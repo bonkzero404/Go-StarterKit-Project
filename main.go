@@ -17,6 +17,9 @@ func main() {
 	// Fiber app
 	app := fiber.New()
 
+	// Setup Logs
+	appRoute.SetupLogs()
+
 	// Call database connection
 	driver.ConnectDB()
 

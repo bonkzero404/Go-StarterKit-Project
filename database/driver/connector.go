@@ -4,12 +4,15 @@ import (
 	"database/sql"
 	"fmt"
 	"go-starterkit-project/config"
+	"go-starterkit-project/utils"
+	"log"
 	"strconv"
 	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 /**
@@ -17,6 +20,32 @@ this variable is a global variable to reuse database connection
 */
 var DB *gorm.DB
 var DBMock *sql.DB
+
+func setupSqlLog() *gorm.Config {
+	var gormConfig gorm.Config
+
+	if config.Config("ENABLE_LOG") == "true" {
+		multiOutput := utils.CreateSqlLog()
+
+		newLogger := logger.New(
+			log.New(multiOutput, "", log.LstdFlags), // io writer
+			logger.Config{
+				SlowThreshold:             time.Second,  // Slow SQL threshold
+				LogLevel:                  logger.Error, // Log level
+				IgnoreRecordNotFoundError: true,         // Ignore ErrRecordNotFound error for logger
+				Colorful:                  false,        // Disable color
+			},
+		)
+
+		gormConfig = gorm.Config{
+			Logger: newLogger,
+		}
+	} else {
+		gormConfig = gorm.Config{}
+	}
+
+	return &gormConfig
+}
 
 /**
 This function as a factory to connect to MySQL or PostgreSQL
@@ -28,10 +57,10 @@ func ConnectDB() *gorm.DB {
 	// check whether in the configuration using mysql or postgresql driver
 	if config.Config("DB_DRIVER") == "mysql" {
 		// Open MySQL connection
-		DB, err = gorm.Open(mysql.Open(DsnMySqlDB()))
+		DB, err = gorm.Open(mysql.Open(DsnMySqlDB()), setupSqlLog())
 	} else if config.Config("DB_DRIVER") == "pgsql" {
 		// Open PostgreSQL connection
-		DB, err = gorm.Open(postgres.Open(DsnPostgreSqlDB()))
+		DB, err = gorm.Open(postgres.Open(DsnPostgreSqlDB()), setupSqlLog())
 	} else {
 		// Stop the application if the driver does not match
 		panic("Database driver not available")

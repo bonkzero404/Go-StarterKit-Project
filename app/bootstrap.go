@@ -1,9 +1,11 @@
 package app
 
 import (
+	"go-starterkit-project/config"
 	"go-starterkit-project/modules/auth"
 	"go-starterkit-project/modules/role"
 	"go-starterkit-project/modules/user"
+	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
@@ -26,4 +28,10 @@ func Bootstrap(app *fiber.App) {
 
 	// Register module role
 	role.RegisterModule(app)
+}
+
+func SetupLogs() {
+	if config.Config("ENABLE_LOG") == "true" {
+		utils.CraeteDirectory(config.Config("LOG_LOCATION"))
+	}
 }
