@@ -6,6 +6,7 @@ import (
 	"go-starterkit-project/config"
 	"go-starterkit-project/utils"
 	"log"
+	"os"
 	"strconv"
 	"time"
 
@@ -25,10 +26,17 @@ func setupSqlLog() *gorm.Config {
 	var gormConfig gorm.Config
 
 	if config.Config("ENABLE_LOG") == "true" {
-		multiOutput := utils.CreateSqlLog()
+		var capLog logger.Writer
+
+		if config.Config("ENABLE_WRITE_TO_FILE_LOG") == "true" {
+			multiOutput := utils.CreateSqlLog()
+			capLog = log.New(multiOutput, "[SQL][ERROR] ", log.LstdFlags)
+		} else {
+			capLog = log.New(os.Stdout, "[SQL][ERROR] ", log.LstdFlags)
+		}
 
 		newLogger := logger.New(
-			log.New(multiOutput, "", log.LstdFlags), // io writer
+			capLog, // io writer
 			logger.Config{
 				SlowThreshold:             time.Second,  // Slow SQL threshold
 				LogLevel:                  logger.Error, // Log level
@@ -41,7 +49,9 @@ func setupSqlLog() *gorm.Config {
 			Logger: newLogger,
 		}
 	} else {
-		gormConfig = gorm.Config{}
+		gormConfig = gorm.Config{
+			Logger: logger.Default.LogMode(logger.Silent),
+		}
 	}
 
 	return &gormConfig

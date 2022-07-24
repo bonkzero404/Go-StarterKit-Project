@@ -1,30 +1,19 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
 	"go-starterkit-project/config"
 	"io"
-	"io/ioutil"
+	"log"
 	"os"
+	"strconv"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func CreateSqlLog() io.Writer {
-	filePath := config.Config("LOG_LOCATION") + config.Config("LOG_SQL_ERROR_FILENAME")
-	getLastDateLog := getLastLineWithSeek(filePath, 1)[0:10]
-	currentDate := time.Now().Format("2006-01-02")
-	fmt.Println(changeDateLogToDate(getLastDateLog) + " " + currentDate)
-
-	rescueStdout := os.Stdout
-	r, w, _ := os.Pipe()
-	os.Stdout = w
-
-	w.Close()
-	out, _ := ioutil.ReadAll(r)
-	os.Stdout = rescueStdout
-
-	fmt.Printf("Captured: %s", out)
-
 	logFile := CreateFile(config.Config("LOG_LOCATION"), config.Config("LOG_SQL_ERROR_FILENAME"))
 	multiOutput := MultiWrite(os.Stdout, logFile)
 
@@ -66,6 +55,61 @@ func getLastLineWithSeek(filepath string, lineFromBottom int) string {
 	}
 
 	return line
+}
+
+func WriteRequestToLog(ctx *fiber.Ctx, ptr string, statusCode int, resp interface{}) {
+
+	if config.Config("ENABLE_LOG") == "true" {
+		logFormat := ptr +
+			" " +
+			time.Now().Format("2006/01/02 15:04:05") +
+			" " +
+			ctx.IP() +
+			" " +
+			ctx.Method() +
+			" " +
+			strconv.Itoa(statusCode) +
+			" " +
+			"ROUTE=" + ctx.Route().Path
+
+		if ctx.Request().URI().QueryString() != nil {
+			logFormat = logFormat + " QUERY_URL=" + string(ctx.Request().URI().QueryString())
+		}
+
+		if ctx.Body() != nil {
+			body := string(ctx.Request().Body())
+
+			helper := make(map[string]interface{})
+
+			err := json.Unmarshal([]byte(body), &helper)
+			if err == nil {
+				bytes, err := json.Marshal(helper)
+				if err == nil {
+					logFormat = logFormat + " PAYLOAD=" + string(bytes)
+				}
+			}
+		}
+
+		bytes, err := json.Marshal(resp)
+		if err == nil {
+			logFormat = logFormat + " RESPONSE=" + string(bytes)
+		}
+
+		if config.Config("ENABLE_WRITE_TO_FILE_LOG") == "true" {
+			CreateFile(config.Config("LOG_LOCATION"), config.Config("LOG_ACCESS_FILENAME"))
+
+			f, err := os.OpenFile(config.Config("LOG_LOCATION")+config.Config("LOG_ACCESS_FILENAME"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+			if err != nil {
+				log.Println(err)
+			}
+			defer f.Close()
+			if _, err := f.WriteString(logFormat + "\r\n"); err != nil {
+				log.Println(err)
+			}
+		}
+
+		log.Println(logFormat)
+	}
 }
 
 func reverseString(str string) string {

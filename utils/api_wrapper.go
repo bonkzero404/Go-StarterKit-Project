@@ -18,8 +18,6 @@ func ApiWrapper(ctx *fiber.Ctx, code int, status string, data interface{}, error
 		Status: status,
 	}
 
-	// print(ctx.Method())
-
 	if code >= 400 {
 		responseJson := dto.Response{
 			Valid: false,
@@ -28,6 +26,7 @@ func ApiWrapper(ctx *fiber.Ctx, code int, status string, data interface{}, error
 			Data:  nil,
 		}
 
+		WriteRequestToLog(ctx, "[ACCESS][ERROR]", code, errors)
 		return ctx.Status(code).JSON(responseJson)
 	}
 
@@ -38,6 +37,7 @@ func ApiWrapper(ctx *fiber.Ctx, code int, status string, data interface{}, error
 		Data:  data,
 	}
 
+	WriteRequestToLog(ctx, "[ACCESS][SUCCESS]", code, data)
 	return ctx.Status(code).JSON(responseJson)
 }
 
