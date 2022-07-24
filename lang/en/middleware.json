@@ -1,0 +1,17 @@
+[
+  {
+    "locale": "en",
+    "key": "middleware:err:unauthorized",
+    "trans": "Unauthorized user"
+  },
+  {
+    "locale": "en",
+    "key": "middleware:err:failed",
+    "trans": "Failed request API"
+  },
+  {
+    "locale": "en",
+    "key": "middleware:err:rate-limitter",
+    "trans": "Too many request"
+  }
+]

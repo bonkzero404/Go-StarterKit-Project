@@ -1,0 +1,17 @@
+[
+  {
+    "locale": "id",
+    "key": "middleware:err:unauthorized",
+    "trans": "Pengguna tidak sah"
+  },
+  {
+    "locale": "id",
+    "key": "middleware:err:failed",
+    "trans": "Gagal membuat permintaan ke API"
+  },
+  {
+    "locale": "id",
+    "key": "middleware:err:rate-limitter",
+    "trans": "Terlalu banyak permintaan"
+  }
+]

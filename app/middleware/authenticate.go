@@ -16,7 +16,7 @@ func Authenticate() func(ctx *fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			return utils.ApiUnauthorized(ctx, dto.Errors{
-				Message: "Unauthorized user",
+				Message: utils.Lang(ctx, "middleware:err:unauthorized"),
 				Cause:   err.Error(),
 				Inputs:  nil,
 			})
