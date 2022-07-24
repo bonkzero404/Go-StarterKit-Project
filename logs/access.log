@@ -1,1 +1,0 @@
-[ACCESS][ERROR] 2022/07/24 19:03:26 127.0.0.1 GET 422 ROUTE=/api/v1/role QUERY_URL=page=1&limit=1&sort=tesss RESPONSE={"message":"Failed to get roles","cause":"status 422: err ERROR: column \"tesss\" does not exist (SQLSTATE 42703)","inputs":null}

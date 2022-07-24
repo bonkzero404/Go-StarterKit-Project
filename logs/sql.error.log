@@ -1,2 +1,0 @@
-[SQL][ERROR] 2022/07/24 19:03:26 /Users/janitrasatria/Developer/go/Go-StarterKit-Project/modules/role/repositories/role_repository.go:42 ERROR: column "tesss" does not exist (SQLSTATE 42703)
-[1.080ms] [rows:0] SELECT * FROM "roles" WHERE "roles"."deleted_at" IS NULL ORDER BY tesss LIMIT 1
