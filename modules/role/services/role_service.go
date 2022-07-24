@@ -7,8 +7,6 @@ import (
 	"go-starterkit-project/modules/role/domain/interfaces"
 	"go-starterkit-project/utils"
 
-	"strings"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -24,7 +22,7 @@ func NewRoleService(
 	}
 }
 
-func (service RoleService) CreateRole(role *dto.RoleRequest) (*dto.RoleResponse, error) {
+func (service RoleService) CreateRole(c *fiber.Ctx, role *dto.RoleRequest) (*dto.RoleResponse, error) {
 
 	roleData := stores.Role{
 		RoleName:        role.RoleName,
@@ -35,16 +33,9 @@ func (service RoleService) CreateRole(role *dto.RoleRequest) (*dto.RoleResponse,
 	err := service.RoleRepository.CreateRole(&roleData).Error
 
 	if err != nil {
-		if strings.Contains(err.Error(), "Duplicate") {
-			return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    "User already register",
-			}
-		}
-
 		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Something went wrong with our server",
+			Message:    utils.Lang(c, "role:err:create:failed-unknown", ""),
 		}
 	}
 

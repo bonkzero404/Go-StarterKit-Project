@@ -24,27 +24,27 @@ func (handler *RoleHandler) CreateRole(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, respModel.Errors{
-			Message: "Failed to create role",
+			Message: utils.Lang(c, "role:err:create:body-parser", ""),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	errors := utils.ValidateStruct(request)
+	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
-			Message: "Failed to create role",
-			Cause:   "Some fields must be validated",
+			Message: utils.Lang(c, "role:err:create:validate", ""),
+			Cause:   utils.Lang(c, "role:err:create:validate-cause", ""),
 			Inputs:  errors,
 		})
 	}
 
-	response, err := handler.RoleService.CreateRole(&request)
+	response, err := handler.RoleService.CreateRole(c, &request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: "Failed to create role",
+			Message: utils.Lang(c, "role:err:create:failed", ""),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

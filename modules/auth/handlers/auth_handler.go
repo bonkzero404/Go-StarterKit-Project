@@ -34,7 +34,7 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 		})
 	}
 
-	errors := utils.ValidateStruct(request)
+	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed authentication",

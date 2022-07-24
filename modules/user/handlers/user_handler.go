@@ -31,7 +31,7 @@ func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
 		})
 	}
 
-	errors := utils.ValidateStruct(request)
+	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to register user",
@@ -65,7 +65,7 @@ func (handler *UserHandler) UserActivation(c *fiber.Ctx) error {
 		})
 	}
 
-	errors := utils.ValidateStruct(request)
+	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to register user",
@@ -99,7 +99,7 @@ func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 		})
 	}
 
-	errors := utils.ValidateStruct(request)
+	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to activate user",
@@ -133,7 +133,7 @@ func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 		})
 	}
 
-	errors := utils.ValidateStruct(request)
+	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to re create activate forgot password",
@@ -167,7 +167,7 @@ func (handler *UserHandler) UpdatePassword(c *fiber.Ctx) error {
 		})
 	}
 
-	errors := utils.ValidateStruct(request)
+	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
 			Message: "Failed to re create activate forgot password",

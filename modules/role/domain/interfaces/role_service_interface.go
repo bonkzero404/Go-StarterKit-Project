@@ -8,7 +8,7 @@ import (
 )
 
 type RoleServiceInterface interface {
-	CreateRole(role *dto.RoleRequest) (*dto.RoleResponse, error)
+	CreateRole(c *fiber.Ctx, role *dto.RoleRequest) (*dto.RoleResponse, error)
 
 	GetRoleList(c *fiber.Ctx) (*utils.Pagination, error)
 

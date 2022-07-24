@@ -5,6 +5,7 @@ import (
 	"go-starterkit-project/config"
 	"go-starterkit-project/database"
 	"go-starterkit-project/database/driver"
+	"go-starterkit-project/utils"
 
 	appRoute "go-starterkit-project/app"
 
@@ -16,6 +17,8 @@ import (
 func main() {
 	// Fiber app
 	app := fiber.New()
+
+	utils.SetupLang()
 
 	// Setup Logs
 	appRoute.SetupLogs()
