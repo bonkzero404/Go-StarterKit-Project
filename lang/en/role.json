@@ -21,7 +21,7 @@
   },
   {
     "locale": "en",
-    "key": "role:err:create:failed-unknown",
-    "trans": "Something went wrong with our server"
+    "key": "role:err:read:failed",
+    "trans": "Failed to load role data"
   }
 ]

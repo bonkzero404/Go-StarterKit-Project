@@ -21,7 +21,7 @@
   },
   {
     "locale": "id",
-    "key": "role:err:create:failed-unknown",
-    "trans": "Ada yang salah dengan server kami"
+    "key": "role:err:read:failed",
+    "trans": "Gagal memuat data role"
   }
 ]

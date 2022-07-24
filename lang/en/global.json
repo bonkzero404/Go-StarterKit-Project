@@ -1,0 +1,7 @@
+[
+  {
+    "locale": "en",
+    "key": "global:err:failed-unknown",
+    "trans": "An error has occurred on the server"
+  }
+]

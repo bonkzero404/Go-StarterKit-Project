@@ -35,7 +35,7 @@ func (service RoleService) CreateRole(c *fiber.Ctx, role *dto.RoleRequest) (*dto
 	if err != nil {
 		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role:err:create:failed-unknown", ""),
+			Message:    utils.Lang(c, "global:err:failed-unknown", ""),
 		}
 	}
 

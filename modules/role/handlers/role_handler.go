@@ -59,7 +59,7 @@ func (handler *RoleHandler) GetRoleList(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: "Failed to get roles",
+			Message: utils.Lang(c, "role:err:read:failed", ""),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
