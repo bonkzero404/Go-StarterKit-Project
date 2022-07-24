@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"go-starterkit-project/config"
 	"log"
 
 	"github.com/go-playground/locales/en"
@@ -16,7 +17,7 @@ func SetupLang() {
 	en := en.New()
 	Utrans = ut.New(en, en, id.New())
 
-	err := Utrans.Import(ut.FormatJSON, "lang")
+	err := Utrans.Import(ut.FormatJSON, config.Config("DIR_LANG"))
 	if err != nil {
 		log.Fatal(err)
 	}
