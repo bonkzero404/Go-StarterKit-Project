@@ -24,7 +24,7 @@ func (handler *RoleHandler) CreateRole(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, respModel.Errors{
-			Message: utils.Lang(c, "role:err:create:body-parser", ""),
+			Message: utils.Lang(c, "role:err:create:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -33,8 +33,8 @@ func (handler *RoleHandler) CreateRole(c *fiber.Ctx) error {
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
-			Message: utils.Lang(c, "role:err:create:validate", ""),
-			Cause:   utils.Lang(c, "role:err:create:validate-cause", ""),
+			Message: utils.Lang(c, "role:err:create:validate"),
+			Cause:   utils.Lang(c, "role:err:create:validate-cause"),
 			Inputs:  errors,
 		})
 	}
@@ -44,7 +44,7 @@ func (handler *RoleHandler) CreateRole(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: utils.Lang(c, "role:err:create:failed", ""),
+			Message: utils.Lang(c, "role:err:create:failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -59,7 +59,7 @@ func (handler *RoleHandler) GetRoleList(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: utils.Lang(c, "role:err:read:failed", ""),
+			Message: utils.Lang(c, "role:err:read:failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
